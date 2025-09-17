@@ -8,10 +8,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 
 import Home from './pages/Home';
+import About from './pages/About';
 
 
 type RootStackParamsList={
-  Home:undefined
+  Home:undefined;
+  About:undefined;
 }
 
 const Stack:any=createNativeStackNavigator();
@@ -22,7 +24,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={'Home'}
+        initialRouteName={'About'}
         screenOptions={{
           // animation: "fade",
         }}
@@ -30,6 +32,11 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={Home}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="About"
+          component={About}
           options={{ headerShown: false }}
         />
 

@@ -1,247 +1,1117 @@
-import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, View, Dimensions, useWindowDimensions, Platform, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from 'react';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  useWindowDimensions,
+  Platform,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from "@react-navigation/native";
+
+
+
 
 import CustomLine from '../components/CustomLine';
+import Footer from '../components/Footer';
+import { useFonts, FONT_FAMILIES } from '../components/Fonts';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const ROOTS_IMAGE_ASPECT_RATIO = 16 / 9;
 
 export default function Home() {
-  const { width } = useWindowDimensions(); // Use useWindowDimensions for real-time updates
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const navigation: any = useNavigation();
 
-  useEffect(() => {
-    async function loadFonts() {
-      try {
-        await Font.loadAsync({
-          'TheSeasons-Medium': require('../fonts/The-Seasons/Fontspring-DEMO-theseasons-reg.otf'),
-          'TheSeasons-Light': require('../fonts/The-Seasons/Fontspring-DEMO-theseasons-lt.otf')
-        });
-        setFontsLoaded(true);
-      } catch (error) {
-        console.error('Error loading fonts:', error);
-        setFontsLoaded(true); // Still allow the app to continue
-      }
-    }
 
-    loadFonts();
-  }, []);
+  const { width } = useWindowDimensions();
+  const [menSelected, setMenSelected] = useState(true);
+  const { fontsLoaded } = useFonts();
 
-  const isDesktop = width >= 768;
+  const isMobile = width < 768;
+  const isTablet = width >= 768 && width < 1024;
+  const isDesktop = width >= 1024;
 
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  // Show loading screen while fonts are loading
   if (!fontsLoaded) {
     return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: 'center', alignItems: 'center' },
+        ]}
+      >
         <Text>Loading...</Text>
       </View>
     );
   }
 
+
+
   return (
     <View style={styles.container}>
-      <View style={[styles.navbar, { height: isDesktop ? 80 : 50 }]}>
-        <View style={{ flexDirection: 'row' }}>
-          <Image
-            source={require('../assets/home/Navbar/navbar-logo.png')}
-            style={[styles.logo, { height: isDesktop ? 100 : 30 }]}
-            resizeMode="contain"
-          />
-          <View style={styles.seachView}>
-            <Ionicons name='search-outline' size={24} color={'#FFFFFF'} />
-            <TextInput
-              style={styles.searchTextInput}
-              placeholder='Search'
-              placeholderTextColor={'white'}
-            />
-          </View>
-        </View>
-
-        <View style={styles.navbarRightButtonsView}>
-          <TouchableOpacity style={styles.navbarRightButton}>
-            <Text style={styles.nrbText}>Home</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navbarRightButton}>
-            <Text style={styles.nrbText}>About Us</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navbarRightButton}>
-            <Text style={styles.nrbText}>Collections</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.navbarRightButton}>
-            <Text style={styles.nrbText}>Support</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={styles.nrbText}>Shop Now</Text>
-            <Ionicons name='chevron-down-outline' color={'white'} size={20} />
-          </TouchableOpacity>
-          <View style={styles.account}>
-            <TouchableOpacity>
-              <Text style={styles.accountButtonsText}>Join</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={styles.accountButtonsText}>Shop</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>{/*Navbar */}
-
-      <ScrollView style={styles.mainBody} contentContainerStyle={{ flexGrow: 1 }}>
-        <View style={styles.heroView}>
-          <CustomLine length={width} color='#E85A4F' style={{ marginTop: 20, marginBottom: 6.5 }} />
-          <CustomLine length={width} color='#E85A4F' />
-          <Image
-            source={require('../assets/home/Header/logo.svg')}
-            style={{ marginTop: 13, height: 75, width: 150 }}
-          />
-          <View style={styles.heroNavLinksView}>
-            <TouchableOpacity style={styles.heroNavLinkButton}>
-              <Text style={styles.heroNavLinkButtonText}>Padma</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.heroNavLinkButton}>
-              <Text style={styles.heroNavLinkButtonText}>Fall Collection</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.heroNavLinkButton}>
-              <Text style={styles.heroNavLinkButtonText}>New Ins</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.heroNavLinkButton, { flexDirection: 'row', alignItems: 'center' }]}>
-              <Text style={styles.heroNavLinkButtonText}>Shop Now</Text>
-              <Ionicons name='chevron-down-outline' color={'black'} size={26} style={{ left: 10, top: 2 }} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={{
-            marginTop: 30,
-            width: '100%',
-            alignItems: 'center',
-
-          }}>{/* VIEW OF THE STUFF WIHIN HERO AND PLACEHOLDER */}
-            <Image
-              style={[styles.responsiveImage, {
-                width: width - 195,
-                borderRadius: 18
-              }]}
-              resizeMode='cover'
-              source={require('../assets/home/Header/Placeholder Image.png')}
-            />
-            <View style={{
-              position: 'absolute',
-              top: '50%', // Position at 50% from top
-              right: 240,
-              transform: [{ translateY: -25 }], // Adjust this value to fine-tune centering
+      <ScrollView
+        style={styles.mainBody}
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
+        {/* NAVBAR */}
+        <View
+          style={[
+            styles.navbar,
+            {
+              height: isDesktop ? 80 : 60,
+              paddingHorizontal: isMobile ? 15 : 70,
+              flexDirection: isMobile ? 'column' : 'row',
+              paddingVertical: isMobile ? 10 : 0,
+            },
+          ]}
+        >
+          {/* Left side */}
+          <View
+            style={{
+              flexDirection: 'row',
               alignItems: 'center',
-            }}>
-              <Text style={{
-                fontFamily: 'TheSeasons-Light',
-                color: '#543236',
-                fontSize: 50,
-              }}>Everyday Luxury</Text>
-              <Text style={{
-                color: '#543236',
-                fontSize: 24,
-                fontWeight: '400'
-              }}>Your everyday, in its best Bèsha</Text>
-              <View style={{ flexDirection: 'row', marginTop: 15 }}>
+              justifyContent: isMobile ? 'space-between' : 'flex-start',
+              width: isMobile ? '100%' : 'auto',
+            }}
+          >
+            <Image
+              source={require('../assets/home/Navbar/navbar-logo.png')}
+              style={[
+                styles.logo,
+                {
+                  height: isDesktop ? 100 : isMobile ? 25 : 40,
+                  marginHorizontal: isMobile ? 0 : 30,
+                },
+              ]}
+              resizeMode="contain"
+            />
+            {isMobile && (
+              <TouchableOpacity>
+                <Ionicons name="menu" size={28} color="white" />
+              </TouchableOpacity>
+            )}
+            {!isMobile && (
+              <View style={[styles.seachView, { left: isMobile ? 0 : 35 }]}>
+                <Ionicons name="search-outline" size={24} color={'#FFFFFF'} />
+                <TextInput
+                  style={styles.searchTextInput}
+                  placeholder="Search"
+                  placeholderTextColor={'white'}
+                />
+              </View>
+            )}
+          </View>
+
+          {/* Right side - Desktop only */}
+          {!isMobile && (
+            <View
+              style={[
+                styles.navbarRightButtonsView,
+                { flexWrap: isTablet ? 'wrap' : 'nowrap' },
+              ]}
+            >
+              <TouchableOpacity
+                style={styles.navbarRightButton}>
+                <Text style={[
+                  styles.nrbText,
+                  { fontSize: isTablet ? 16 : 19 },
+                ]}>Home</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => { navigation.navigate('About') }}
+
+                style={styles.navbarRightButton}>
+                <Text style={[
+                  styles.nrbText,
+                  { fontSize: isTablet ? 16 : 19 },
+                ]}>About Us</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navbarRightButton}>
+                <Text style={[
+                  styles.nrbText,
+                  { fontSize: isTablet ? 16 : 19 },
+                ]}>Collections</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navbarRightButton}>
+                <Text style={[
+                  styles.nrbText,
+                  { fontSize: isTablet ? 16 : 19 },
+                ]}>Support</Text>
+              </TouchableOpacity>
+
+
+
+
+
+
+              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                  style={[
+                    styles.nrbText,
+                    { fontSize: isTablet ? 16 : 19 },
+                  ]}
+                >
+                  Shop Now
+                </Text>
+                <Ionicons name="chevron-down-outline" color={'white'} size={20} />
+              </TouchableOpacity>
+              <View style={styles.account}>
                 <TouchableOpacity>
-                  <Text style={{ fontSize: 20, paddingHorizontal: 10 }}>Shop</Text>
+                  <Text
+                    style={[
+                      styles.accountButtonsText,
+                      { fontSize: isTablet ? 16 : 19 },
+                    ]}
+                  >
+                    Join
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Text style={{ fontSize: 20, paddingHorizontal: 10 }}>Learn More</Text>
+                  <Text
+                    style={[
+                      styles.accountButtonsText,
+                      { fontSize: isTablet ? 16 : 19 },
+                    ]}
+                  >
+                    Shop
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </View>
+
+        {/* HERO SECTION */}
+        <View style={styles.heroView}>
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            style={{ marginTop: 20, marginBottom: 6.5 }}
+          />
+          <CustomLine length={width} color="#E85A4F" />
+          <Image
+            source={require('../assets/home/Header/logo.svg')}
+            style={{
+              marginTop: 13,
+              height: isMobile ? 50 : 75,
+              width: isMobile ? 100 : 150,
+            }}
+          />
+
+          {/* Hero Nav Links */}
+          <View
+            style={[
+              styles.heroNavLinksView,
+              {
+                flexDirection: isMobile ? 'column' : 'row',
+                alignItems: 'center',
+              },
+            ]}
+          >
+            {['Padma', 'Fall Collection', 'New Ins'].map((label, i) => (
+              <TouchableOpacity
+                key={i}
+                style={[
+                  styles.heroNavLinkButton,
+                  { marginVertical: isMobile ? 5 : 0 },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.heroNavLinkButtonText,
+                    { fontSize: isMobile ? 18 : 22 },
+                  ]}
+                >
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              style={[
+                styles.heroNavLinkButton,
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: isMobile ? 5 : 0,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.heroNavLinkButtonText,
+                  { fontSize: isMobile ? 18 : 22 },
+                ]}
+              >
+                Shop Now
+              </Text>
+              <Ionicons
+                name="chevron-down-outline"
+                color={'black'}
+                size={isMobile ? 22 : 26}
+                style={{ left: 10, top: 2 }}
+              />
+            </TouchableOpacity>
+          </View>
+
+          {/* Hero Image + Overlay */}
+          <View
+            style={{
+              marginTop: isMobile ? 20 : 30,
+              width: '100%',
+              alignItems: 'center',
+              position: 'relative',
+            }}
+          >
+            <Image
+              style={[
+                styles.responsiveImage,
+                {
+                  width: isMobile ? width - 40 : width - 195,
+                  borderRadius: isMobile ? 12 : 18,
+                },
+              ]}
+              resizeMode="cover"
+              source={require('../assets/home/Header/Placeholder Image.png')}
+            />
+            <View
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: isMobile ? 20 : 240,
+                left: isMobile ? 20 : 'auto',
+                transform: [{ translateY: isMobile ? -60 : -25 }],
+                alignItems: isMobile ? 'center' : 'flex-start',
+                width: isMobile ? width - 80 : 'auto',
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+                  color: '#543236',
+                  fontSize: isMobile ? 24 : 50,
+                  textAlign: isMobile ? 'center' : 'left',
+                }}
+              >
+                Everyday Luxury
+              </Text>
+              <Text
+                style={{
+                  color: '#543236',
+                  fontSize: isMobile ? 14 : 24,
+                  fontWeight: '400',
+                  textAlign: isMobile ? 'center' : 'left',
+                  marginTop: isMobile ? 5 : 0,
+                }}
+              >
+                Your everyday, in its best Bèsha
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: isMobile ? 20 : 45,
+                  justifyContent: 'center',
+                  flexWrap: 'wrap',
+                }}
+              >
+                {['Shop', 'Learn More'].map((txt, i) => (
+                  <TouchableOpacity
+                    key={i}
+                    style={{ marginHorizontal: isMobile ? 5 : 0, marginVertical: isMobile ? 5 : 0 }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: isMobile ? 16 : 20,
+                        paddingHorizontal: 10,
+                      }}
+                    >
+                      {txt}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* ROOTS SECTION */}
+        <View style={[styles.root]}>
+          <Image
+            source={require('../assets/home/Layout/roots.png')}
+            style={{
+              width: width,
+              height: width / ROOTS_IMAGE_ASPECT_RATIO,
+              opacity: 0.52,
+              resizeMode: 'cover',
+            }}
+          />
+          <View
+            style={{
+              position: 'absolute',
+              top: '47%',
+              left: isMobile ? 20 : 150,
+              right: isMobile ? 20 : 'auto',
+              alignItems: isMobile ? 'center' : 'flex-start',
+              transform: [{ translateY: isMobile ? -80 : 0 }],
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+                color: '#543236',
+                fontSize: isMobile ? 22 : 50,
+                flexWrap: 'wrap',
+                width: isMobile ? width - 40 : 600,
+                textAlign: isMobile ? 'center' : 'left',
+              }}
+            >
+              Where Tradition Meets Modern Fashion
+            </Text>
+            <Text
+              style={{
+                color: '#543236',
+                fontSize: isMobile ? 14 : 22,
+                flexWrap: 'wrap',
+                width: isMobile ? width - 40 : 600,
+                marginTop: isMobile ? 10 : 20,
+                textAlign: isMobile ? 'center' : 'left',
+              }}
+            >
+              At BÉSHAs, we redefine fashion by merging traditional handloom
+              fabrics with contemporary designs. Our unique approach allows you
+              to celebrate your heritage while expressing your individuality.
+            </Text>
+          </View>
+          {!isMobile && (
+            <Image
+              source={require('../assets/Placeholder Image.png')}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: width - 500,
+                transform: [{ translateX: -340 }, { translateY: -340 }],
+                width: 680,
+                height: 680,
+                resizeMode: 'contain',
+              }}
+            />
+          )}
+        </View>
+
+        {/* FIRST DEMOS SECTION */}
+        <View
+          style={[
+            styles.firstDemosView,
+            {
+              paddingHorizontal: isMobile ? 20 : 0,
+              paddingVertical: !isMobile ? 90 : 40,
+            }
+          ]}
+        >
+          <View style={{ marginTop: 30, alignItems: 'center' }}>
+            <Text
+              style={{
+                fontSize: isMobile ? 14 : 20,
+                color: '#43282b',
+                marginBottom: isMobile ? 12 : 25,
+              }}
+            >
+              Crafted
+            </Text>
+            <Text
+              style={{
+                fontSize: isMobile ? 28 : 50,
+                fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+                color: '#43282b',
+                marginBottom: isMobile ? 15 : 35,
+                textAlign: 'center',
+                paddingHorizontal: isMobile ? 10 : 0,
+              }}
+            >
+              Movement And Wearability
+            </Text>
+            <Text
+              style={{
+                fontSize: isMobile ? 16 : 26,
+                fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+                color: '#43282b',
+                textAlign: 'center',
+              }}
+            >
+              Craft that moves like you
+            </Text>
+          </View>
+
+          {/* Men/Women Toggle */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              marginTop: isMobile ? 25 : 50,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => setMenSelected(true)}
+              style={{
+                backgroundColor: menSelected ? '#451b17' : '',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 12,
+                marginHorizontal: isMobile ? 8 : 15,
+                paddingHorizontal: isMobile ? 15 : 20,
+                paddingVertical: 6,
+                borderColor: '#451b17',
+                borderWidth: !menSelected ? 0.2 : 0,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: isMobile ? 16 : 18,
+                  color: menSelected ? 'white' : '#451b17',
+                }}
+              >
+                Men
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setMenSelected(false)}
+              style={{
+                backgroundColor: !menSelected ? '#451b17' : '',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 12,
+                marginHorizontal: isMobile ? 8 : 15,
+                borderColor: '#451b17',
+                borderWidth: menSelected ? 0.2 : 0,
+                paddingHorizontal: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: isMobile ? 16 : 20,
+                  color: !menSelected ? 'white' : '#451b17',
+                }}
+              >
+                Women
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Product Grid - First Row */}
+          <View
+            style={{
+              flexDirection: isMobile ? 'column' : 'row',
+              paddingHorizontal: isMobile ? 0 : 50,
+              marginTop: isMobile ? 40 : 120,
+              marginHorizontal: isMobile ? 0 : 50,
+              justifyContent: 'space-between',
+              alignItems: isMobile ? 'center' : 'flex-start',
+            }}
+          >
+            {[
+              { name: 'Polo Shirt', image: require('../assets/home/Layout/Placeholder Image.png') },
+              { name: 'Button Down Shirt', image: require('../assets/home/Layout/Placeholder Image.png') },
+              { name: 'Pique Polo Shirt', image: require('../assets/home/Layout/Placeholder Image.png') },
+              { name: 'White Dress', image: require('../assets/home/Layout/Placeholder Image.png') },
+            ].map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={{
+                  alignItems: 'center',
+                  marginBottom: isMobile ? 25 : 0,
+                  width: isMobile ? '85%' : 'auto',
+                }}
+              >
+                <Image
+                  source={item.image}
+                  style={
+                    isMobile
+                      ? {
+                        width: '100%',
+                        height: 200,
+                        resizeMode: 'cover',
+                        borderRadius: 8,
+                      }
+                      : {}
+                  }
+                />
+                <Text
+                  style={[
+                    styles.firstDemosItemText,
+                    {
+                      fontSize: isMobile ? 16 : 24,
+                      textAlign: 'center',
+                    },
+                  ]}
+                >
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Product Grid - Second Row */}
+          <View
+            style={{
+              flexDirection: isMobile ? 'column' : 'row',
+              paddingHorizontal: isMobile ? 0 : 50,
+              marginTop: isMobile ? 30 : 120,
+              marginHorizontal: isMobile ? 0 : 50,
+              justifyContent: 'space-between',
+              alignItems: isMobile ? 'center' : 'flex-start',
+            }}
+          >
+            {[
+              { name: 'White Shirt', image: require('../assets/home/Layout/Placeholder Image-1.png') },
+              { name: 'Red Dress', image: require('../assets/home/Layout/Placeholder Image-1.png') },
+              { name: 'Pants', image: require('../assets/home/Layout/Placeholder Image-1.png') },
+            ].map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={{
+                  alignItems: 'center',
+                  marginBottom: isMobile ? 25 : 0,
+                  width: isMobile ? '85%' : 'auto',
+                }}
+              >
+                <Image
+                  source={item.image}
+                  style={
+                    isMobile
+                      ? {
+                        width: '100%',
+                        height: 260,
+                        resizeMode: 'cover',
+                        borderRadius: 8,
+                      }
+                      : {
+                        width: 500,
+                        height: 560,
+                        resizeMode: 'contain',
+                      }
+                  }
+                />
+                <Text
+                  style={[
+                    styles.firstDemosItemText,
+                    {
+                      fontSize: isMobile ? 16 : 24,
+                      textAlign: 'center',
+                    },
+                  ]}
+                >
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Divider */}
+          <View style={{ alignItems: 'center' }}>
+            <CustomLine
+              length={width - (isMobile ? 40 : 160)}
+              color="#E85A4F"
+              thickness={4}
+              style={{ marginTop: isMobile ? 40 : 140, marginBottom: 9.5 }}
+            />
+            <CustomLine
+              length={width - (isMobile ? 40 : 160)}
+              color="#E85A4F"
+              thickness={4}
+            />
+          </View>
+        </View>
+
+        {/* SECOND DEMOS (kept same, but you can wrap rows into columns on mobile if needed) */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+        {!isMobile && (
+
+          <View style={styles.secondDemosView}>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{
+                backgroundColor: '#543236',
+                height: 880,
+                width: 704,
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <Image
+                  source={require('../assets/home/SDemo/Placeholder Image-big.png')}
+                  style={{
+                    height: 820,
+                    width: 700,
+                    resizeMode: 'contain'
+                  }}
+                />
+              </View>
+              <View style={{
+                padding: 50,
+                backgroundColor: '#EEEBE9',
+                height: 880,
+                width: 704,
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row'
+              }}>
+                <TouchableOpacity><Ionicons name='chevron-back-outline' color={'black'} size={24} /></TouchableOpacity>
+                <View style={{ alignItems: 'center' }}>
+                  <Image
+                    source={require('../assets/home/SDemo/Placeholder Image-scrollable.png')}
+                    style={{
+                      height: 350,
+                      resizeMode: 'contain',
+                      marginHorizontal: 10
+                    }}
+                  />
+                  <Text style={{
+                    fontSize: 24,
+                    marginTop: 8,
+                    fontFamily: 'TheSeason-Light',
+                    color: '#451b17',
+                    fontWeight: '100'
+                  }}>White Shorts</Text>
+                </View>
+                <TouchableOpacity><Ionicons name='chevron-forward-outline' color={'black'} size={24} /></TouchableOpacity>
+              </View>
+            </View>{/* FIRST ROW */}
+
+
+
+
+
+
+
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{
+                padding: 50,
+                backgroundColor: '#EEEBE9',
+                height: 880,
+                width: 704,
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row'
+              }}>
+                <TouchableOpacity><Ionicons name='chevron-back-outline' color={'black'} size={24} /></TouchableOpacity>
+                <View style={{ alignItems: 'center' }}>
+                  <Image
+                    source={require('../assets/home/SDemo/Placeholder Image-scrollable.png')}
+                    style={{
+                      height: 350,
+                      resizeMode: 'contain',
+                      marginHorizontal: 10
+                    }}
+                  />
+                  <Text style={{
+                    fontSize: 24,
+                    marginTop: 8,
+                    fontFamily: 'TheSeason-Light',
+                    color: '#451b17',
+                    fontWeight: '100'
+                  }}>White Shorts</Text>
+                </View>
+                <TouchableOpacity><Ionicons name='chevron-forward-outline' color={'black'} size={24} /></TouchableOpacity>
+              </View>
+              <View style={{
+                backgroundColor: '#543236',
+                height: 880,
+                width: 704,
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <Image
+                  source={require('../assets/home/SDemo/Placeholder Image-big.png')}
+                  style={{
+                    height: 820,
+                    width: 700,
+                    resizeMode: 'contain'
+                  }}
+                />
+              </View>
+            </View>
+            <View style={{ alignItems: 'center' }}>
+              <CustomLine
+                length={width - (isMobile ? 40 : 160)}
+                color='#E85A4F'
+                thickness={4}
+                style={{
+                  marginTop: isMobile ? 60 : 140,
+                  marginBottom: 9.5
+                }}
+              />
+              <CustomLine
+                length={width - (isMobile ? 40 : 160)}
+                color='#E85A4F'
+                thickness={4}
+              />
+            </View>
+          </View>
+        )}
+
+        {/* REVIEWS */}
+        <View
+          style={[
+            styles.reviewView,
+            {
+              flexDirection: isMobile ? 'column' : 'row',
+              marginTop: isMobile ? 0 : 120,
+              paddingHorizontal: isMobile ? 20 : 0,
+            },
+          ]}
+        >
+          <View>
+            <Image source={require('../assets/home/Testimonial/Placeholder Image.png')} style={{ width: isMobile ? width * 0.9 : undefined, resizeMode: 'contain' }} />
+          </View>
+          <View style={{ alignItems: isMobile ? 'center' : 'flex-start' }}>
+            <View style={{ flexDirection: 'row', marginTop: isMobile ? 15 : 0 }}>
+              {Array(5)
+                .fill(null)
+                .map((_, i) => (
+                  <Image key={i} source={require('../assets/home/Testimonial/star.svg')} style={{ marginHorizontal: 2 }} />
+                ))}
+            </View>
+            <Text
+              style={{
+                fontSize: isMobile ? 18 : 28,
+                flexWrap: 'wrap',
+                width: isMobile ? width - 40 : 550,
+                marginTop: 30,
+                textAlign: isMobile ? 'center' : 'left',
+                fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+                color: '#43282b',
+              }}
+            >
+              BÉSHAs has transformed my wardrobe! The blend of tradition and
+              modern style is simply stunning.
+            </Text>
+            <Text
+              style={{
+                fontSize: isMobile ? 14 : 16,
+                marginTop: 20,
+                textAlign: isMobile ? 'center' : 'left',
+                color: '#43282b',
+              }}
+            >
+              Aisha Patel
+            </Text>
+            <Text
+              style={{
+                fontSize: isMobile ? 14 : 16,
+                textAlign: isMobile ? 'center' : 'left',
+                color: '#43282b',
+              }}
+            >
+              Fashion Blogger
+            </Text>
+          </View>
+        </View>
+
+        {/* DISCOVER SECTION */}
+        <View
+          style={[
+            styles.discover,
+            {
+              flexDirection: isMobile ? 'column' : 'row',
+              marginTop: isMobile ? 60 : 120,
+              paddingHorizontal: isMobile ? 20 : 0,
+            },
+          ]}
+        >
+          <View style={{ justifyContent: 'center', alignItems: isMobile ? 'center' : 'flex-start' }}>
+            <Text
+              style={{
+                fontSize: isMobile ? 28 : 64,
+                flexWrap: 'wrap',
+                width: isMobile ? width - 40 : 620,
+                textAlign: isMobile ? 'center' : 'left',
+                fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+                color: '#43282b',
+              }}
+            >
+              Discover Your Unique Style
+            </Text>
+            <Text
+              style={{
+                fontSize: isMobile ? 16 : 23,
+                flexWrap: 'wrap',
+                width: isMobile ? width - 40 : 800,
+                marginTop: 25,
+                textAlign: isMobile ? 'center' : 'left',
+                color: '#43282b',
+              }}
+            >
+              Explore our vibrant collection that blends tradition with modern
+              flair, perfect for the GenZ spirit.
+            </Text>
+            <View
+              style={{
+                marginTop: 30,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#451b17',
+                  borderRadius: 12,
+                  paddingHorizontal: 18,
+                  paddingVertical: 8,
+                  margin: 5,
+                }}
+              >
+                <Text style={{ color: 'white', fontSize: 16 }}>Shop</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  borderRadius: 12,
+                  paddingHorizontal: 20,
+                  paddingVertical: 6,
+                  borderWidth: 0.4,
+                  borderColor: '#451b17',
+                  margin: 5,
+                }}
+              >
+                <Text style={{ color: '#451b17', fontSize: 16 }}>Subscribe</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{ justifyContent: 'center', marginTop: isMobile ? 30 : 0 }}>
+            <Image
+              source={require('../assets/home/CTA/Placeholder Image.png')}
+              style={{
+                height: isMobile ? 300 : 550,
+                resizeMode: 'contain',
+              }}
+            />
+          </View>
+        </View>
+
+        {/* NEWSLETTER */}
+        <View
+          style={[
+            styles.newsletterView,
+            {
+              flexDirection: isMobile ? 'column' : 'row',
+              padding: isMobile ? 20 : 0,
+              alignItems: 'center',
+              paddingBottom: 35,
+
+            },
+          ]}
+        >
+          <View style={{ justifyContent: 'center', alignItems: isMobile ? 'center' : 'flex-start' }}>
+            <Text
+              style={{
+                fontSize: isMobile ? 28 : 64,
+                width: isMobile ? width - 40 : 620,
+                textAlign: isMobile ? 'center' : 'left',
+                fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+                color: '#FCF4E3',
+              }}
+            >
+              Join Our BÉSHAs Community
+            </Text>
+            <Text
+              style={{
+                fontSize: isMobile ? 14 : 20,
+                maxWidth: isMobile ? width - 40 : 700,
+                marginTop: 20,
+                textAlign: isMobile ? 'center' : 'left',
+                color: '#FCF4E3',
+              }}
+            >
+              Subscribe to our newsletter for exclusive updates and special
+              offers tailored just for you.
+            </Text>
+            {/* Input */}
+            <View style={{ marginTop: 40, alignItems: isMobile ? 'center' : 'flex-start' }}>
+              <View
+                style={{
+                  flexDirection: isMobile ? 'column' : 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <TextInput
+                  placeholder="Enter your email"
+                  placeholderTextColor={'rgba(255,255,255,0.6)'}
+                  selectionColor={'#FCF4E3'}
+                  style={{
+                    borderBottomColor: 'rgba(255,255,255,0.2)',
+                    borderBottomWidth: 1,
+                    width: isMobile ? width - 60 : 470,
+                    paddingVertical: 12,
+                    fontSize: 15,
+                    color: '#FCF4E3',
+                    marginBottom: isMobile ? 15 : 0,
+                    textAlign: isMobile ? 'center' : 'left',
+                  }}
+                />
+                <TouchableOpacity>
+                  <LinearGradient
+                    colors={['#ECDDCA', '#2C3540']}
+                    start={{ x: 0.1, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{
+                      borderRadius: 13,
+                      borderColor: '#FCF4E3',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderWidth: 1,
+                      marginLeft: isMobile ? 0 : 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: 'white',
+                        paddingVertical: 9,
+                        paddingHorizontal: 14,
+                        borderRadius: 13,
+                        fontSize: 16,
+                      }}
+                    >
+                      Sign Up
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 12,
+                  justifyContent: 'center',
+                  flexWrap: 'wrap',
+                }}
+              >
+                <Text style={{ fontSize: 12, color: 'white' }}>
+                  By clicking Sign Up, you agree to our{' '}
+                </Text>
+                <TouchableOpacity>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textDecorationLine: 'underline',
+                      color: 'white',
+                    }}
+                  >
+                    Terms and Conditions
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
-        </View>{/* HERO */}
-        <View style={[styles.root]}>
-          <Image
-            source={require('../assets/home/Layout/roots.png')}
-            style={{ width: width }}
-          />
-          <View style={{
-            position: 'absolute',
-            top: '50%', // Position at 50% from top
-            left: 150,
-            // transform: [{ translateY: -25 }], // Adjust this value to fine-tune centering
-            alignItems: 'center',
-          }}>{/* ROOT TEXT CONTAINER */}
-            <Text style={{
-              fontFamily: 'TheSeasons-Medium',
-              color: '#543236',
-              fontSize: 50,
-              flexWrap: 'wrap',
-              width: 600,
-              // Add drop shadow styles
-              textShadowColor: 'rgba(0,0,0,0.4)',
-              textShadowOffset: { width: 0, height: 2 },
-              textShadowRadius: 9,
-            }}>Where Tradition Meets Modern Fashion</Text>
-            <Text style={{
-
-              // fontFamily: 'TheSeasons-Medium',
-              color: '#543236',
-              fontSize: 22,
-              flexWrap: 'wrap',
-              width: 600,
-            }}>At BÉSHAs, we redefine fashion by merging traditional handloom fabrics with contemporary designs. Our unique approach allows you to celebrate your heritage while expressing your individuality.</Text>
+          <View style={{ justifyContent: 'center', marginTop: isMobile ? 30 : 0 }}>
+            <Image
+              source={require('../assets/home/CTA/Placeholder Image.png')}
+              style={{
+                height: isMobile ? 280 : 550,
+                resizeMode: 'contain',
+              }}
+            />
           </View>
         </View>
-      </ScrollView>{/**MAIN BODY */}
-    </View>//Container
-  )
+
+        {/* FOOTER */}
+        <Footer />
+      </ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
+  footer: {},
+  newsletterView: {
+    backgroundColor: '#2C3540',
+    justifyContent: 'space-evenly',
+  },
+  gitBox: {
+    alignItems: 'center',
+    paddingVertical: 50,
+  },
+  getInTouchView: {
+    paddingTop: 120,
+    alignItems: 'center',
+    paddingBottom: 60,
+  },
+  discover: {
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  reviewView: {
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  secondDemosView: {
+    alignItems: 'center',
+    marginTop: 60,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#FCF4E3'
+    backgroundColor: '#FCF4E3',
+  },
+  firstDemosItemText: {
+    fontSize: 24,
+    marginTop: 8,
+    fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+    color: '#451b17',
+    fontWeight: '100',
+  },
+  firstDemosView: {
+    backgroundColor: '#FCF4E3',
   },
   root: {
-    paddingTop: 50,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   heroNavLinkButton: {
-    marginHorizontal: 22
+    marginHorizontal: 22,
   },
   heroNavLinkButtonText: {
     fontSize: 22,
     color: '#412023',
   },
   mainBody: {
-    flex: 1
+    flex: 1,
   },
   heroNavLinksView: {
-    flexDirection: 'row',
-    marginTop: 15,
-    flexWrap: 'wrap', // Allow wrapping on smaller screens
+    flexWrap: 'wrap',
     justifyContent: 'center',
   },
   heroView: {
     alignItems: 'center',
-    paddingBottom: 35
-
+    paddingBottom: 85,
   },
-  // New styles for fully responsive image
   responsiveImage: {
-    aspectRatio: 1312 / 632, // Adjust this ratio based on your image
+    aspectRatio: 1312 / 632,
   },
   seachView: {
     flexDirection: 'row',
     alignItems: 'center',
-    left: 20
+    left: 35,
   },
   account: {
     flexDirection: 'row',
-    marginLeft: 18
+    marginLeft: 18,
   },
   navbarRightButton: {
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
   accountButtonsText: {
     color: 'white',
@@ -255,15 +1125,16 @@ const styles = StyleSheet.create({
   },
   navbarRightButtonsView: {
     flexDirection: 'row',
-    flexWrap: 'wrap', // Allow wrapping on smaller screens
+    flexWrap: 'wrap',
   },
   searchTextInput: {
     paddingHorizontal: 7,
     fontSize: 18,
+    color: 'white',
+    outlineWidth: 0,
   },
   navbar: {
-    backgroundColor: "#2C3540",
-    flexDirection: 'row',
+    backgroundColor: '#2C3540',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 70,
@@ -277,10 +1148,10 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-      }
-    })
+      },
+    }),
   },
   logo: {
     marginHorizontal: 30,
   },
-})
+});
