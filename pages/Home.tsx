@@ -18,7 +18,6 @@ import { useNavigation } from "@react-navigation/native";
 
 
 
-
 import CustomLine from '../components/CustomLine';
 import Footer from '../components/Footer';
 import { useFonts, FONT_FAMILIES } from '../components/Fonts';
@@ -140,7 +139,7 @@ export default function Home() {
                   { fontSize: isTablet ? 16 : 19 },
                 ]}>Collections</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.navbarRightButton}>
+              <TouchableOpacity style={styles.navbarRightButton} onPress={() => { navigation.navigate('Support') }}>
                 <Text style={[
                   styles.nrbText,
                   { fontSize: isTablet ? 16 : 19 },
@@ -823,7 +822,22 @@ export default function Home() {
             </Text>
           </View>
         </View>
-
+        <View style={{ alignItems: 'center' }}>
+          <CustomLine
+            length={width - (isMobile ? 40 : 160)}
+            color='#E85A4F'
+            thickness={4}
+            style={{
+              marginTop: isMobile ? 60 : 140,
+              marginBottom: 9.5
+            }}
+          />
+          <CustomLine
+            length={width - (isMobile ? 40 : 160)}
+            color='#E85A4F'
+            thickness={4}
+          />
+        </View>
         {/* DISCOVER SECTION */}
         <View
           style={[
@@ -904,6 +918,69 @@ export default function Home() {
             />
           </View>
         </View>
+        
+        <LinearGradient
+          colors={['#FCF4E3', '#2C3540']}
+        >
+          <View style={styles.getInTouchView}>
+            <LinearGradient
+              colors={['#ECDDCA', '#2C3540']}
+              style={{ width: width - 200, borderRadius: 35 }}
+            >
+              <View style={[styles.gitBox, { width: width - 200 }]}>
+                <Text style={{ fontSize: 50, fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM }}>Get in Touch</Text>
+                <Text style={{ marginTop: 20, fontSize: 16 }}>We'd love to hear from you!</Text>
+              </View>
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start',  // Align items to the top
+                justifyContent: 'space-evenly',   // Center the entire row
+                width: '100%',             // Take full width
+                paddingHorizontal: 20,     // Add some padding
+                gap: 40                    // Equal spacing between items
+              }}>
+                <View style={{
+                  alignItems: 'center',
+                  flex: 1,                 // Equal width distribution
+                  maxWidth: 350           // Limit maximum width
+                }}>
+                  <Image
+                    source={require('../assets/home/Contact/mail.svg')}
+                  />
+                  <Text style={{ fontSize: 38, fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, marginTop: 32 }}>Email</Text>
+                  <Text style={{ marginTop: 22, color: '#fcf4e3', fontSize: 16, textAlign: 'center' }}>For inquiries, reach us at our email address</Text>
+                  <Text style={{ marginTop: 22, marginBottom: 25, color: '#fcf4e3', textDecorationLine: 'underline', fontSize: 16 }}>hello@beshas.com</Text>
+                </View>
+
+                <View style={{
+                  alignItems: 'center',
+                  flex: 1,                 // Equal width distribution
+                  maxWidth: 350           // Limit maximum width
+                }}>
+                  <Image
+                    source={require('../assets/home/Contact/call.svg')}
+                  />
+                  <Text style={{ fontSize: 38, fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, marginTop: 32 }}>Phone</Text>
+                  <Text style={{ marginTop: 22, color: '#fcf4e3', fontSize: 16, textAlign: 'center' }}>Call us for any questions or collaborations.</Text>
+                  <Text style={{ marginTop: 22, marginBottom: 25, color: '#fcf4e3', textDecorationLine: 'underline', fontSize: 16 }}>+1 (555) 123-4567</Text>
+                </View>
+
+                <View style={{
+                  alignItems: 'center',
+                  flex: 1,                 // Equal width distribution
+                  maxWidth: 350           // Limit maximum width
+                }}>
+                  <Image
+                    source={require('../assets/home/Contact/location.svg')}
+                  />
+                  <Text style={{ fontSize: 38, fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, marginTop: 32 }}>Office</Text>
+                  <Text style={{ marginTop: 22, color: '#fcf4e3', fontSize: 16, textAlign: 'center' }}>Visit us at our headquarters for a personal touch.</Text>
+                  <Text style={{ marginTop: 22, marginBottom: 25, color: '#fcf4e3', textDecorationLine: 'underline', fontSize: 16 }}>456 Fashion Ave, Sydney NSW 2000 AU</Text>
+                </View>
+              </View>
+            </LinearGradient>
+          </View>
+        </LinearGradient>
 
         {/* NEWSLETTER */}
         <View
@@ -1047,7 +1124,7 @@ const styles = StyleSheet.create({
     paddingVertical: 50,
   },
   getInTouchView: {
-    paddingTop: 120,
+    paddingTop: 100,
     alignItems: 'center',
     paddingBottom: 60,
   },
@@ -1056,7 +1133,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   reviewView: {
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
   secondDemosView: {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,19 +12,26 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-
 import { useFonts, FONT_FAMILIES } from "../components/Fonts";
 import CustomLine from "../components/CustomLine";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function About() {
   const navigation: any = useNavigation();
+
+  const { width, height } = useWindowDimensions();
+  const [menSelected, setMenSelected] = useState(true);
   const { fontsLoaded } = useFonts();
-  const { width } = useWindowDimensions();
 
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1024;
   const isDesktop = width >= 1024;
+
+  // Calculate navbar height
+  const navbarHeight = isDesktop ? 80 : 60;
+
+  // Calculate banner height to fill viewport minus navbar
+  const bannerHeight = height - navbarHeight;
 
   if (!fontsLoaded) return null;
 
@@ -41,7 +48,7 @@ export default function About() {
           style={[
             styles.navbar,
             {
-              height: isDesktop ? 80 : 60,
+              height: navbarHeight,
               paddingHorizontal: isMobile ? 15 : 70,
               flexDirection: isMobile ? 'column' : 'row',
               paddingVertical: isMobile ? 10 : 0,
@@ -104,7 +111,6 @@ export default function About() {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => { navigation.navigate('About') }}
-
                 style={styles.navbarRightButton}>
                 <Text style={[
                   styles.nrbText,
@@ -117,16 +123,12 @@ export default function About() {
                   { fontSize: isTablet ? 16 : 19 },
                 ]}>Collections</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.navbarRightButton}>
+              <TouchableOpacity style={styles.navbarRightButton} onPress={() => { navigation.navigate('Support') }}>
                 <Text style={[
                   styles.nrbText,
                   { fontSize: isTablet ? 16 : 19 },
                 ]}>Support</Text>
               </TouchableOpacity>
-
-
-
-
 
               <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text
@@ -163,81 +165,128 @@ export default function About() {
               </View>
             </View>
           )}
-        </View>{/* NAVBAR */}
-        <View style={{ alignItems: 'center' }}>
+        </View>
+
+        {/* BANNER SECTION */}
+        <View style={styles.bannerContainer}>
           <Image
             source={require('../assets/about/banner.svg')}
-            style={{
-              width: width,
-              height: width / (16 / 9),
-              resizeMode: 'cover', // Fills container but may crop
-              position: 'absolute'
-            }}
+            style={[
+              styles.bannerImage,
+              {
+                width: width,
+                height: bannerHeight,
+              }
+            ]}
+            resizeMode="cover" // This will maintain aspect ratio and crop if needed
           />
+
+          {/* TINT OVERLAY */}
           <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: width,
-              height: width / (16 / 9),
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            }}
-          >{/* TINT */}</View>
-          <View style={{marginTop:24, alignItems:'center'}}>
-            <CustomLine color="#FBF8F4" length={width}   />
-            <CustomLine color="#FBF8F4" length={width} style={{marginTop:10}} />
-          </View>
-          <Image
-            source={require('../assets/about/thumb.png')}
-            style={{marginTop:24}}
+            style={[
+              styles.tintOverlay,
+              {
+                width: width,
+                height: bannerHeight,
+              }
+            ]}
           />
-          <View></View>
+
+          {/* BANNER CONTENT */}
+          <View style={[
+            styles.bannerContent,
+            {
+              height: bannerHeight,
+            }
+          ]}>
+            <View style={styles.linesContainer}>
+              <CustomLine color="#FBF8F4" length={width} />
+              <CustomLine color="#FBF8F4" length={width} style={{ marginTop: 10 }} />
+            </View>
+
+            <Image
+              source={require('../assets/about/thumb.png')}
+              style={styles.thumbImage}
+            />
+
+            <View style={[
+              styles.heroTextContainer,
+              {
+                left: isMobile ? 10 : 120,
+                width: isMobile ? width - 60 : 'auto',
+              }
+            ]}>
+              <Text style={[
+                styles.heroText,
+                {
+                  fontSize: isMobile ? 36 : isTablet ? 56 : 72,
+                  width: isMobile ? width - 60 : 500,
+                }
+              ]}>
+                Embrace Tradition with a Modern Twist
+              </Text>
+              <Text style={styles.subHeroText}>
+                Heritage reimagined{'\n'}From tradition, into tomorrow.
+              </Text>
+              <View style={{
+                flexDirection: 'row',
+                marginTop:30
+              }}>
+                <TouchableOpacity style={{
+                  borderWidth: 1,
+                  borderColor: 'white',
+                  borderRadius: 15,
+                  alignItems:'center',
+                  justifyContent:'center'
+                }}><Text style={{ color: 'white', fontSize: 20, paddingVertical: 8, paddingHorizontal: 15, fontWeight:'400', fontFamily:FONT_FAMILIES.NUNITO_SANS }}>Shop</Text></TouchableOpacity>
+
+
+                <TouchableOpacity style={{
+                  borderWidth: 1,
+                  borderColor: 'rgba(255,255,255,0.2)',
+                  borderRadius: 15,
+                  alignItems:'center',
+                  justifyContent:'center',
+                  marginHorizontal:20
+                }}><Text style={{ color: 'white', fontSize: 20, paddingVertical: 8, paddingHorizontal: 15, fontWeight:'400', fontFamily:FONT_FAMILIES.NUNITO_SANS }}>Learn More</Text></TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>{/* TOP BANNER */}
+
+        <View style={styles.heritageView}>
+          <View style={styles.heritageLeftView}>
+
+          </View>
+          <View style={styles.heritageRightView}>
+
+          </View>
         </View>
+
+
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  heritageRightView:{
+    
+  },
+  heritageLeftView:{
+
+  },
+  heritageView:{
+    backgroundColor:'#FCF4E3',
+    // height:2000
+  },
+
   container: {
     backgroundColor: '#FCF4E3',
     flex: 1,
   },
-  responsiveImage: {
-    aspectRatio: 1312 / 632,
-  },
-  seachView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    left: 35,
-  },
-  account: {
-    flexDirection: 'row',
-    marginLeft: 18,
-  },
-  navbarRightButton: {
-    paddingHorizontal: 15,
-  },
-  accountButtonsText: {
-    color: 'white',
-    paddingHorizontal: 15,
-    fontSize: 19,
-  },
-  nrbText: {
-    color: 'white',
-    paddingHorizontal: 10,
-    fontSize: 19,
-  },
-  navbarRightButtonsView: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  searchTextInput: {
-    paddingHorizontal: 7,
-    fontSize: 18,
-    color: 'white',
-    outlineWidth: 0,
+  mainBody: {
+    flex: 1,
   },
   navbar: {
     backgroundColor: '#2C3540',
@@ -260,7 +309,93 @@ const styles = StyleSheet.create({
   logo: {
     marginHorizontal: 30,
   },
-  mainBody: {
-    flex: 1,
+  seachView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    left: 35,
+  },
+  searchTextInput: {
+    paddingHorizontal: 7,
+    fontSize: 18,
+    color: 'white',
+    outlineWidth: 0,
+  },
+  navbarRightButtonsView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  navbarRightButton: {
+    paddingHorizontal: 15,
+  },
+  nrbText: {
+    color: 'white',
+    paddingHorizontal: 10,
+    fontSize: 19,
+  },
+  account: {
+    flexDirection: 'row',
+    marginLeft: 18,
+  },
+  accountButtonsText: {
+    color: 'white',
+    paddingHorizontal: 15,
+    fontSize: 19,
+  },
+  bannerContainer: {
+    position: 'relative',
+    alignItems: 'center',
+  },
+  bannerImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  tintOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  bannerContent: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  linesContainer: {
+    position: 'absolute',
+    top: 24,
+    alignItems: 'center',
+  },
+  thumbImage: {
+    position: 'absolute',
+    top: 72,
+    width: 150,
+    height: 100,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    left: '50%',
+    transform: [{ translateX: -75 }], // Half of the width to center it
+  },
+  heroTextContainer: {
+    position: 'absolute',
+    top: '50%',
+    transform: [{ translateY: -120 }],
+    alignItems: 'flex-start',
+  },
+  heroText: {
+    color: 'white',
+    fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+    flexWrap: 'wrap',
+    textAlign: 'left',
+    marginBottom: 8,
+  },
+  subHeroText: {
+    color: 'white',
+    fontSize: 24,
+    textAlign: 'left',
+    fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, // You can change this to a different font if needed
+    lineHeight: 31,
+    marginTop: 25
   },
 });

@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Home from './pages/Home';
 import About from './pages/About';
+import Support from './pages/Support';
 
 
 type RootStackParamsList={
@@ -39,6 +40,13 @@ export default function App() {
           component={About}
           options={{ headerShown: false }}
         />
+        
+        <Stack.Screen
+          name="Support"
+          component={Support}
+          options={{ headerShown: false }}
+        />
+        
 
       </Stack.Navigator>
     </NavigationContainer>
