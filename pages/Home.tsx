@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   Image,
   StyleSheet,
@@ -10,33 +10,45 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Animated
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from "@react-navigation/native";
-
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 
 import CustomLine from '../components/CustomLine';
 import Footer from '../components/Footer';
 import { useFonts, FONT_FAMILIES } from '../components/Fonts';
+import { useScrollNavbar } from '../components/ScrollNavbar';
 
 const windowWidth = Dimensions.get('window').width;
 const ROOTS_IMAGE_ASPECT_RATIO = 16 / 9;
 
 export default function Home() {
   const navigation: any = useNavigation();
-
-
   const { width } = useWindowDimensions();
   const [menSelected, setMenSelected] = useState(true);
   const { fontsLoaded } = useFonts();
+
+  const scrollViewRef = useRef(null);
+
+    useFocusEffect(
+    useCallback(() => {
+      if (scrollViewRef.current) {
+        //@ts-ignore
+        scrollViewRef.current.scrollTo({ y: 0, animated: false });
+      }
+    }, [])
+  );
 
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1024;
   const isDesktop = width >= 1024;
 
+  const navbarHeight = isDesktop ? 80 : 60;
+  const { handleScroll, navbarTranslateY, isNavbarVisible } = useScrollNavbar(navbarHeight);
   if (!fontsLoaded) {
     return (
       <View
@@ -50,22 +62,22 @@ export default function Home() {
     );
   }
 
-
-
   return (
     <View style={styles.container}>
-      <ScrollView
-        style={styles.mainBody}
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
+      <Animated.View
+        style={[
+          styles.navbarContainer,
+          {
+            transform: [{ translateY: navbarTranslateY }],
+            height: navbarHeight,
+          }
+        ]}
       >
-        {/* NAVBAR */}
         <View
           style={[
             styles.navbar,
             {
-              height: isDesktop ? 80 : 60,
+              height: navbarHeight,
               paddingHorizontal: isMobile ? 15 : 70,
               flexDirection: isMobile ? 'column' : 'row',
               paddingVertical: isMobile ? 10 : 0,
@@ -93,7 +105,7 @@ export default function Home() {
               resizeMode="contain"
             />
             {isMobile && (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.openDrawer()}>
                 <Ionicons name="menu" size={28} color="white" />
               </TouchableOpacity>
             )}
@@ -118,16 +130,18 @@ export default function Home() {
               ]}
             >
               <TouchableOpacity
-                style={styles.navbarRightButton}>
+                style={styles.navbarRightButton}
+                onPress={() => navigation.navigate('Home')}
+              >
                 <Text style={[
                   styles.nrbText,
                   { fontSize: isTablet ? 16 : 19 },
                 ]}>Home</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => { navigation.navigate('About') }}
-
-                style={styles.navbarRightButton}>
+                onPress={() => navigation.navigate('About')}
+                style={styles.navbarRightButton}
+              >
                 <Text style={[
                   styles.nrbText,
                   { fontSize: isTablet ? 16 : 19 },
@@ -139,17 +153,15 @@ export default function Home() {
                   { fontSize: isTablet ? 16 : 19 },
                 ]}>Collections</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.navbarRightButton} onPress={() => { navigation.navigate('Support') }}>
+              <TouchableOpacity
+                style={styles.navbarRightButton}
+                onPress={() => navigation.navigate('Support')}
+              >
                 <Text style={[
                   styles.nrbText,
                   { fontSize: isTablet ? 16 : 19 },
                 ]}>Support</Text>
               </TouchableOpacity>
-
-
-
-
-
 
               <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text
@@ -187,7 +199,18 @@ export default function Home() {
             </View>
           )}
         </View>
+      </Animated.View>
 
+      {/* SCROLLABLE CONTENT */}
+      <Animated.ScrollView
+        ref={scrollViewRef} // Add this ref
+        style={[styles.mainBody, { paddingTop: navbarHeight }]}
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
         {/* HERO SECTION */}
         <View style={styles.heroView}>
           <CustomLine
@@ -339,7 +362,6 @@ export default function Home() {
             </View>
           </View>
         </View>
-
         {/* ROOTS SECTION */}
         <View style={[styles.root]}>
           <Image
@@ -918,65 +940,306 @@ export default function Home() {
             />
           </View>
         </View>
-        
+
+
+
         <LinearGradient
           colors={['#FCF4E3', '#2C3540']}
         >
-          <View style={styles.getInTouchView}>
+          <View style={[
+            styles.getInTouchView,
+            {
+              paddingTop: isMobile ? 60 : 100,
+              paddingBottom: isMobile ? 40 : 60,
+              paddingHorizontal: isMobile ? 20 : 0,
+            }
+          ]}>
             <LinearGradient
               colors={['#ECDDCA', '#2C3540']}
-              style={{ width: width - 200, borderRadius: 35 }}
+              style={{
+                width: isMobile ? width - 40 : width - 200,
+                borderRadius: isMobile ? 20 : 35,
+              }}
             >
-              <View style={[styles.gitBox, { width: width - 200 }]}>
-                <Text style={{ fontSize: 50, fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM }}>Get in Touch</Text>
-                <Text style={{ marginTop: 20, fontSize: 16 }}>We'd love to hear from you!</Text>
+              {/* Header Section */}
+              <View style={[
+                styles.gitBox,
+                {
+                  width: isMobile ? width - 40 : width - 200,
+                  paddingVertical: isMobile ? 30 : 50,
+                  paddingHorizontal: isMobile ? 20 : 0,
+                }
+              ]}>
+                <Text style={{
+                  fontSize: isMobile ? 32 : 50,
+                  fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+                  textAlign: 'center',
+                }}>
+                  Get in Touch
+                </Text>
+                <Text style={{
+                  marginTop: 20,
+                  fontSize: isMobile ? 14 : 16,
+                  textAlign: 'center',
+                  color: isMobile ? '#fcf4e3' : 'inherit',
+                }}>
+                  We'd love to hear from you!
+                </Text>
               </View>
+
+              {/* Contact Sections Container */}
               <View style={{
-                flexDirection: 'row',
-                alignItems: 'flex-start',  // Align items to the top
-                justifyContent: 'space-evenly',   // Center the entire row
-                width: '100%',             // Take full width
-                paddingHorizontal: 20,     // Add some padding
-                gap: 40                    // Equal spacing between items
+                paddingHorizontal: isMobile ? 20 : 20,
+                paddingBottom: isMobile ? 40 : 25,
               }}>
-                <View style={{
-                  alignItems: 'center',
-                  flex: 1,                 // Equal width distribution
-                  maxWidth: 350           // Limit maximum width
-                }}>
-                  <Image
-                    source={require('../assets/home/Contact/mail.svg')}
-                  />
-                  <Text style={{ fontSize: 38, fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, marginTop: 32 }}>Email</Text>
-                  <Text style={{ marginTop: 22, color: '#fcf4e3', fontSize: 16, textAlign: 'center' }}>For inquiries, reach us at our email address</Text>
-                  <Text style={{ marginTop: 22, marginBottom: 25, color: '#fcf4e3', textDecorationLine: 'underline', fontSize: 16 }}>hello@beshas.com</Text>
-                </View>
+                {isMobile ? (
+                  // Mobile: Stack vertically with proper spacing
+                  <View>
+                    {/* Email Section */}
+                    <View style={{
+                      alignItems: 'center',
+                      width: '100%',
+                      marginBottom: 40,
+                    }}>
+                      <Image
+                        source={require('../assets/home/Contact/mail.svg')}
+                        style={{
+                          width: 50,
+                          height: 50,
+                        }}
+                        resizeMode="contain"
+                      />
+                      <Text style={{
+                        fontSize: 24,
+                        fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+                        marginTop: 20,
+                        textAlign: 'center',
+                        color: '#fcf4e3',
+                      }}>
+                        Email
+                      </Text>
+                      <Text style={{
+                        marginTop: 15,
+                        color: '#fcf4e3',
+                        fontSize: 14,
+                        textAlign: 'center',
+                        lineHeight: 20,
+                        paddingHorizontal: 10,
+                      }}>
+                        For inquiries, reach us at our email address
+                      </Text>
+                      <Text style={{
+                        marginTop: 15,
+                        color: '#fcf4e3',
+                        textDecorationLine: 'underline',
+                        fontSize: 14,
+                        textAlign: 'center',
+                      }}>
+                        hello@beshas.com
+                      </Text>
+                    </View>
 
-                <View style={{
-                  alignItems: 'center',
-                  flex: 1,                 // Equal width distribution
-                  maxWidth: 350           // Limit maximum width
-                }}>
-                  <Image
-                    source={require('../assets/home/Contact/call.svg')}
-                  />
-                  <Text style={{ fontSize: 38, fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, marginTop: 32 }}>Phone</Text>
-                  <Text style={{ marginTop: 22, color: '#fcf4e3', fontSize: 16, textAlign: 'center' }}>Call us for any questions or collaborations.</Text>
-                  <Text style={{ marginTop: 22, marginBottom: 25, color: '#fcf4e3', textDecorationLine: 'underline', fontSize: 16 }}>+1 (555) 123-4567</Text>
-                </View>
+                    {/* Phone Section */}
+                    <View style={{
+                      alignItems: 'center',
+                      width: '100%',
+                      marginBottom: 40,
+                    }}>
+                      <Image
+                        source={require('../assets/home/Contact/call.svg')}
+                        style={{
+                          width: 50,
+                          height: 50,
+                        }}
+                        resizeMode="contain"
+                      />
+                      <Text style={{
+                        fontSize: 24,
+                        fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+                        marginTop: 20,
+                        textAlign: 'center',
+                        color: '#fcf4e3',
+                      }}>
+                        Phone
+                      </Text>
+                      <Text style={{
+                        marginTop: 15,
+                        color: '#fcf4e3',
+                        fontSize: 14,
+                        textAlign: 'center',
+                        lineHeight: 20,
+                        paddingHorizontal: 10,
+                      }}>
+                        Call us for any questions or collaborations.
+                      </Text>
+                      <Text style={{
+                        marginTop: 15,
+                        color: '#fcf4e3',
+                        textDecorationLine: 'underline',
+                        fontSize: 14,
+                        textAlign: 'center',
+                      }}>
+                        +1 (555) 123-4567
+                      </Text>
+                    </View>
 
-                <View style={{
-                  alignItems: 'center',
-                  flex: 1,                 // Equal width distribution
-                  maxWidth: 350           // Limit maximum width
-                }}>
-                  <Image
-                    source={require('../assets/home/Contact/location.svg')}
-                  />
-                  <Text style={{ fontSize: 38, fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, marginTop: 32 }}>Office</Text>
-                  <Text style={{ marginTop: 22, color: '#fcf4e3', fontSize: 16, textAlign: 'center' }}>Visit us at our headquarters for a personal touch.</Text>
-                  <Text style={{ marginTop: 22, marginBottom: 25, color: '#fcf4e3', textDecorationLine: 'underline', fontSize: 16 }}>456 Fashion Ave, Sydney NSW 2000 AU</Text>
-                </View>
+                    {/* Office Section */}
+                    <View style={{
+                      alignItems: 'center',
+                      width: '100%',
+                    }}>
+                      <Image
+                        source={require('../assets/home/Contact/location.svg')}
+                        style={{
+                          width: 50,
+                          height: 50,
+                        }}
+                        resizeMode="contain"
+                      />
+                      <Text style={{
+                        fontSize: 24,
+                        fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+                        marginTop: 20,
+                        textAlign: 'center',
+                        color: '#fcf4e3',
+                      }}>
+                        Office
+                      </Text>
+                      <Text style={{
+                        marginTop: 15,
+                        color: '#fcf4e3',
+                        fontSize: 14,
+                        textAlign: 'center',
+                        lineHeight: 20,
+                        paddingHorizontal: 10,
+                      }}>
+                        Visit us at our headquarters for a personal touch.
+                      </Text>
+                      <Text style={{
+                        marginTop: 15,
+                        color: '#fcf4e3',
+                        textDecorationLine: 'underline',
+                        fontSize: 14,
+                        textAlign: 'center',
+                      }}>
+                        456 Fashion Ave, Sydney NSW 2000 AU
+                      </Text>
+                    </View>
+                  </View>
+                ) : (
+                  // Desktop: Keep original horizontal layout
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-evenly',
+                    width: '100%',
+                  }}>
+                    {/* Email Section */}
+                    <View style={{
+                      alignItems: 'center',
+                      flex: 1,
+                      maxWidth: 350,
+                    }}>
+                      <Image
+                        source={require('../assets/home/Contact/mail.svg')}
+                      />
+                      <Text style={{
+                        fontSize: 38,
+                        fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+                        marginTop: 32,
+                      }}>
+                        Email
+                      </Text>
+                      <Text style={{
+                        marginTop: 22,
+                        color: '#fcf4e3',
+                        fontSize: 16,
+                        textAlign: 'center',
+                      }}>
+                        For inquiries, reach us at our email address
+                      </Text>
+                      <Text style={{
+                        marginTop: 22,
+                        marginBottom: 25,
+                        color: '#fcf4e3',
+                        textDecorationLine: 'underline',
+                        fontSize: 16,
+                      }}>
+                        hello@beshas.com
+                      </Text>
+                    </View>
+
+                    {/* Phone Section */}
+                    <View style={{
+                      alignItems: 'center',
+                      flex: 1,
+                      maxWidth: 350,
+                    }}>
+                      <Image
+                        source={require('../assets/home/Contact/call.svg')}
+                      />
+                      <Text style={{
+                        fontSize: 38,
+                        fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+                        marginTop: 32,
+                      }}>
+                        Phone
+                      </Text>
+                      <Text style={{
+                        marginTop: 22,
+                        color: '#fcf4e3',
+                        fontSize: 16,
+                        textAlign: 'center',
+                      }}>
+                        Call us for any questions or collaborations.
+                      </Text>
+                      <Text style={{
+                        marginTop: 22,
+                        marginBottom: 25,
+                        color: '#fcf4e3',
+                        textDecorationLine: 'underline',
+                        fontSize: 16,
+                      }}>
+                        +1 (555) 123-4567
+                      </Text>
+                    </View>
+
+                    {/* Office Section */}
+                    <View style={{
+                      alignItems: 'center',
+                      flex: 1,
+                      maxWidth: 350,
+                    }}>
+                      <Image
+                        source={require('../assets/home/Contact/location.svg')}
+                      />
+                      <Text style={{
+                        fontSize: 38,
+                        fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+                        marginTop: 32,
+                      }}>
+                        Office
+                      </Text>
+                      <Text style={{
+                        marginTop: 22,
+                        color: '#fcf4e3',
+                        fontSize: 16,
+                        textAlign: 'center',
+                      }}>
+                        Visit us at our headquarters for a personal touch.
+                      </Text>
+                      <Text style={{
+                        marginTop: 22,
+                        marginBottom: 25,
+                        color: '#fcf4e3',
+                        textDecorationLine: 'underline',
+                        fontSize: 16,
+                      }}>
+                        456 Fashion Ave, Sydney NSW 2000 AU
+                      </Text>
+                    </View>
+                  </View>
+                )}
               </View>
             </LinearGradient>
           </View>
@@ -1108,12 +1371,92 @@ export default function Home() {
 
         {/* FOOTER */}
         <Footer />
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  navbarContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      },
+      default: {
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+    }),
+  },
+  mainBody: {
+    flex: 1,
+  },
+  navbar: {
+    backgroundColor: '#2C3540',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  logo: {
+    marginHorizontal: 30,
+  },
+  seachView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    left: 35,
+  },
+  searchTextInput: {
+    paddingHorizontal: 7,
+    fontSize: 18,
+    color: 'white',
+    outlineWidth: 0,
+  },
+  navbarRightButtonsView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  navbarRightButton: {
+    paddingHorizontal: 15,
+  },
+  nrbText: {
+    color: 'white',
+    paddingHorizontal: 10,
+    fontSize: 19,
+  },
+  account: {
+    flexDirection: 'row',
+    marginLeft: 18,
+  },
+  accountButtonsText: {
+    color: 'white',
+    paddingHorizontal: 15,
+    fontSize: 19,
+  },
+  heroView: {
+    alignItems: 'center',
+    paddingBottom: 85,
+  },
+  heroNavLinkButton: {
+    marginHorizontal: 22,
+  },
+  heroNavLinkButtonText: {
+    fontSize: 22,
+    color: '#412023',
+  },
+  heroNavLinksView: {
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  responsiveImage: {
+    aspectRatio: 1312 / 632,
+  },
   footer: {},
   newsletterView: {
     backgroundColor: '#2C3540',
@@ -1156,79 +1499,5 @@ const styles = StyleSheet.create({
   },
   root: {
     alignItems: 'center',
-  },
-  heroNavLinkButton: {
-    marginHorizontal: 22,
-  },
-  heroNavLinkButtonText: {
-    fontSize: 22,
-    color: '#412023',
-  },
-  mainBody: {
-    flex: 1,
-  },
-  heroNavLinksView: {
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  heroView: {
-    alignItems: 'center',
-    paddingBottom: 85,
-  },
-  responsiveImage: {
-    aspectRatio: 1312 / 632,
-  },
-  seachView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    left: 35,
-  },
-  account: {
-    flexDirection: 'row',
-    marginLeft: 18,
-  },
-  navbarRightButton: {
-    paddingHorizontal: 15,
-  },
-  accountButtonsText: {
-    color: 'white',
-    paddingHorizontal: 15,
-    fontSize: 19,
-  },
-  nrbText: {
-    color: 'white',
-    paddingHorizontal: 10,
-    fontSize: 19,
-  },
-  navbarRightButtonsView: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  searchTextInput: {
-    paddingHorizontal: 7,
-    fontSize: 18,
-    color: 'white',
-    outlineWidth: 0,
-  },
-  navbar: {
-    backgroundColor: '#2C3540',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 70,
-    ...Platform.select({
-      web: {
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      },
-      default: {
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-    }),
-  },
-  logo: {
-    marginHorizontal: 30,
   },
 });

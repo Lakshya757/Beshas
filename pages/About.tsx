@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -8,20 +8,31 @@ import {
   useWindowDimensions,
   TextInput,
   Platform,
-  ScrollView
+  ScrollView,
+  Animated
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useScrollNavbar } from "../components/ScrollNavbar";
 import { useFonts, FONT_FAMILIES } from "../components/Fonts";
 import CustomLine from "../components/CustomLine";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function About() {
   const navigation: any = useNavigation();
-
   const { width, height } = useWindowDimensions();
   const [menSelected, setMenSelected] = useState(true);
   const { fontsLoaded } = useFonts();
+  const scrollViewRef = useRef(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (scrollViewRef.current) {
+        //@ts-ignore
+        // scrollViewRef.current.scrollTo({ y: 0, animated: false });
+      }
+    }, [])
+  );
+
 
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1024;
@@ -30,255 +41,288 @@ export default function About() {
   // Calculate navbar height
   const navbarHeight = isDesktop ? 80 : 60;
 
+  // Add the scroll navbar hook
+  const { handleScroll, navbarTranslateY, isNavbarVisible } = useScrollNavbar(navbarHeight);
+
   // Calculate banner height to fill viewport minus navbar
   const bannerHeight = height - navbarHeight;
 
-  if (!fontsLoaded) return null;
 
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.mainBody}
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
+  
+
+  if (!fontsLoaded) { return null };
+
+
+  return (<View style={styles.container}>
+    {/* ANIMATED NAVBAR - Fixed Position */}
+    <Animated.View
+      style={[
+        styles.navbarContainer,
+        {
+          transform: [{ translateY: navbarTranslateY }],
+          height: navbarHeight,
+        }
+      ]}
+    >
+      <View
+        style={[
+          styles.navbar,
+          {
+            height: navbarHeight,
+            paddingHorizontal: isMobile ? 15 : 70,
+            flexDirection: isMobile ? 'column' : 'row',
+            paddingVertical: isMobile ? 10 : 0,
+          },
+        ]}
       >
-        {/* NAVBAR */}
+        {/* Left side */}
         <View
-          style={[
-            styles.navbar,
-            {
-              height: navbarHeight,
-              paddingHorizontal: isMobile ? 15 : 70,
-              flexDirection: isMobile ? 'column' : 'row',
-              paddingVertical: isMobile ? 10 : 0,
-            },
-          ]}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: isMobile ? 'space-between' : 'flex-start',
+            width: isMobile ? '100%' : 'auto',
+          }}
         >
-          {/* Left side */}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: isMobile ? 'space-between' : 'flex-start',
-              width: isMobile ? '100%' : 'auto',
-            }}
-          >
-            <Image
-              source={require('../assets/home/Navbar/navbar-logo.png')}
-              style={[
-                styles.logo,
-                {
-                  height: isDesktop ? 100 : isMobile ? 25 : 40,
-                  marginHorizontal: isMobile ? 0 : 30,
-                },
-              ]}
-              resizeMode="contain"
-            />
-            {isMobile && (
-              <TouchableOpacity>
-                <Ionicons name="menu" size={28} color="white" />
-              </TouchableOpacity>
-            )}
-            {!isMobile && (
-              <View style={[styles.seachView, { left: isMobile ? 0 : 35 }]}>
-                <Ionicons name="search-outline" size={24} color={'#FFFFFF'} />
-                <TextInput
-                  style={styles.searchTextInput}
-                  placeholder="Search"
-                  placeholderTextColor={'white'}
-                />
-              </View>
-            )}
-          </View>
-
-          {/* Right side - Desktop only */}
+          <Image
+            source={require('../assets/home/Navbar/navbar-logo.png')}
+            style={[
+              styles.logo,
+              {
+                height: isDesktop ? 100 : isMobile ? 25 : 40,
+                marginHorizontal: isMobile ? 0 : 30,
+              },
+            ]}
+            resizeMode="contain"
+          />
+          {isMobile && (
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <Ionicons name="menu" size={28} color="white" />
+            </TouchableOpacity>
+          )}
           {!isMobile && (
-            <View
-              style={[
-                styles.navbarRightButtonsView,
-                { flexWrap: isTablet ? 'wrap' : 'nowrap' },
-              ]}
-            >
-              <TouchableOpacity
-                style={styles.navbarRightButton}
-                onPress={() => { navigation.navigate('Home') }}
-              >
-                <Text style={[
-                  styles.nrbText,
-                  { fontSize: isTablet ? 16 : 19 },
-                ]}>Home</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => { navigation.navigate('About') }}
-                style={styles.navbarRightButton}>
-                <Text style={[
-                  styles.nrbText,
-                  { fontSize: isTablet ? 16 : 19 },
-                ]}>About Us</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.navbarRightButton}>
-                <Text style={[
-                  styles.nrbText,
-                  { fontSize: isTablet ? 16 : 19 },
-                ]}>Collections</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.navbarRightButton} onPress={() => { navigation.navigate('Support') }}>
-                <Text style={[
-                  styles.nrbText,
-                  { fontSize: isTablet ? 16 : 19 },
-                ]}>Support</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text
-                  style={[
-                    styles.nrbText,
-                    { fontSize: isTablet ? 16 : 19 },
-                  ]}
-                >
-                  Shop Now
-                </Text>
-                <Ionicons name="chevron-down-outline" color={'white'} size={20} />
-              </TouchableOpacity>
-              <View style={styles.account}>
-                <TouchableOpacity>
-                  <Text
-                    style={[
-                      styles.accountButtonsText,
-                      { fontSize: isTablet ? 16 : 19 },
-                    ]}
-                  >
-                    Join
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Text
-                    style={[
-                      styles.accountButtonsText,
-                      { fontSize: isTablet ? 16 : 19 },
-                    ]}
-                  >
-                    Shop
-                  </Text>
-                </TouchableOpacity>
-              </View>
+            <View style={[styles.seachView, { left: isMobile ? 0 : 35 }]}>
+              <Ionicons name="search-outline" size={24} color={'#FFFFFF'} />
+              <TextInput
+                style={styles.searchTextInput}
+                placeholder="Search"
+                placeholderTextColor={'white'}
+              />
             </View>
           )}
         </View>
 
-        {/* BANNER SECTION */}
-        <View style={styles.bannerContainer}>
-          <Image
-            source={require('../assets/about/banner.svg')}
-            style={[
-              styles.bannerImage,
-              {
-                width: width,
-                height: bannerHeight,
-              }
-            ]}
-            resizeMode="cover" // This will maintain aspect ratio and crop if needed
-          />
-
-          {/* TINT OVERLAY */}
+        {/* Right side - Desktop only */}
+        {!isMobile && (
           <View
             style={[
-              styles.tintOverlay,
-              {
-                width: width,
-                height: bannerHeight,
-              }
+              styles.navbarRightButtonsView,
+              { flexWrap: isTablet ? 'wrap' : 'nowrap' },
             ]}
-          />
+          >
+            <TouchableOpacity
+              style={styles.navbarRightButton}
+              onPress={() => navigation.navigate('Home')}
+            >
+              <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>Home</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('About')}
+              style={styles.navbarRightButton}
+            >
+              <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>About Us</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navbarRightButton}>
+              <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>Collections</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navbarRightButton}
+              onPress={() => navigation.navigate('Support')}
+            >
+              <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>Support</Text>
+            </TouchableOpacity>
 
-          {/* BANNER CONTENT */}
-          <View style={[
-            styles.bannerContent,
+            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>Shop Now</Text>
+              <Ionicons name="chevron-down-outline" color={'white'} size={20} />
+            </TouchableOpacity>
+            <View style={styles.account}>
+              <TouchableOpacity>
+                <Text style={[styles.accountButtonsText, { fontSize: isTablet ? 16 : 19 }]}>Join</Text>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Text style={[styles.accountButtonsText, { fontSize: isTablet ? 16 : 19 }]}>Shop</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      </View>
+    </Animated.View>
+
+    {/* SCROLLABLE CONTENT */}
+    <Animated.ScrollView
+      ref={scrollViewRef}
+      style={[styles.mainBody, { paddingTop: navbarHeight }]}
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+      onScroll={handleScroll}
+      scrollEventThrottle={16}
+    >
+      {/* BANNER SECTION */}
+      <View style={styles.bannerContainer}>
+        <Image
+          source={require('../assets/about/banner.svg')}
+          style={[
+            styles.bannerImage,
             {
+              width: width,
               height: bannerHeight,
             }
+          ]}
+          resizeMode="cover"
+        />
+
+        {/* TINT OVERLAY */}
+        <View
+          style={[
+            styles.tintOverlay,
+            {
+              width: width,
+              height: bannerHeight,
+            }
+          ]}
+        />
+
+        {/* BANNER CONTENT */}
+        <View style={[styles.bannerContent, { height: bannerHeight }]}>
+          <View style={styles.linesContainer}>
+            <CustomLine color="#FBF8F4" length={width} />
+            <CustomLine color="#FBF8F4" length={width} style={{ marginTop: 10 }} />
+          </View>
+
+          <Image
+            source={require('../assets/about/thumb.png')}
+            style={styles.thumbImage}
+          />
+
+          <View style={[
+            styles.heroTextContainer,
+            {
+              left: isMobile ? 30 : 120,
+              width: isMobile ? width - 60 : 'auto',
+            }
           ]}>
-            <View style={styles.linesContainer}>
-              <CustomLine color="#FBF8F4" length={width} />
-              <CustomLine color="#FBF8F4" length={width} style={{ marginTop: 10 }} />
-            </View>
-
-            <Image
-              source={require('../assets/about/thumb.png')}
-              style={styles.thumbImage}
-            />
-
-            <View style={[
-              styles.heroTextContainer,
+            <Text style={[
+              styles.heroText,
               {
-                left: isMobile ? 10 : 120,
-                width: isMobile ? width - 60 : 'auto',
+                fontSize: isMobile ? 36 : isTablet ? 56 : 72,
+                width: isMobile ? width - 60 : 500,
               }
             ]}>
-              <Text style={[
-                styles.heroText,
-                {
-                  fontSize: isMobile ? 36 : isTablet ? 56 : 72,
-                  width: isMobile ? width - 60 : 500,
-                }
-              ]}>
-                Embrace Tradition with a Modern Twist
-              </Text>
-              <Text style={styles.subHeroText}>
-                Heritage reimagined{'\n'}From tradition, into tomorrow.
-              </Text>
-              <View style={{
-                flexDirection: 'row',
-                marginTop:30
+              Embrace Tradition with a Modern Twist
+            </Text>
+            <Text style={styles.subHeroText}>
+              Heritage reimagined{'\n'}From tradition, into tomorrow.
+            </Text>
+            <View style={{ flexDirection: 'row', marginTop: 30 }}>
+              <TouchableOpacity style={{
+                borderWidth: 1,
+                borderColor: 'white',
+                borderRadius: 15,
+                alignItems: 'center',
+                justifyContent: 'center'
               }}>
-                <TouchableOpacity style={{
-                  borderWidth: 1,
-                  borderColor: 'white',
-                  borderRadius: 15,
-                  alignItems:'center',
-                  justifyContent:'center'
-                }}><Text style={{ color: 'white', fontSize: 20, paddingVertical: 8, paddingHorizontal: 15, fontWeight:'400', fontFamily:FONT_FAMILIES.NUNITO_SANS }}>Shop</Text></TouchableOpacity>
+                <Text style={{
+                  color: 'white',
+                  fontSize: 20,
+                  paddingVertical: 8,
+                  paddingHorizontal: 15,
+                  fontWeight: '400',
+                  fontFamily: FONT_FAMILIES.NUNITO_SANS
+                }}>Shop</Text>
+              </TouchableOpacity>
 
-
-                <TouchableOpacity style={{
-                  borderWidth: 1,
-                  borderColor: 'rgba(255,255,255,0.2)',
-                  borderRadius: 15,
-                  alignItems:'center',
-                  justifyContent:'center',
-                  marginHorizontal:20
-                }}><Text style={{ color: 'white', fontSize: 20, paddingVertical: 8, paddingHorizontal: 15, fontWeight:'400', fontFamily:FONT_FAMILIES.NUNITO_SANS }}>Learn More</Text></TouchableOpacity>
-              </View>
+              <TouchableOpacity style={{
+                borderWidth: 1,
+                borderColor: 'rgba(255,255,255,0.2)',
+                borderRadius: 15,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginHorizontal: 20
+              }}>
+                <Text style={{
+                  color: 'white',
+                  fontSize: 20,
+                  paddingVertical: 8,
+                  paddingHorizontal: 15,
+                  fontWeight: '400',
+                  fontFamily: FONT_FAMILIES.NUNITO_SANS
+                }}>Learn More</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </View>{/* TOP BANNER */}
+        </View>
+      </View>
 
-        <View style={styles.heritageView}>
-          <View style={styles.heritageLeftView}>
-
+      {/* Heritage Section */}
+      <View style={styles.heritageView}>
+        <View style={styles.heritageLeftView}>
+          <Text>Heritage</Text>
+          <Text>Where Tradition Meets Modern Elegance</Text>
+          <Text>At BÉSHAs, we redefine traditional handloom fabrics with contemporary designs. Our pieces celebrate cultural heritage while appealing to the modern sensibility.</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{}}>{/* ROW TEXT LEFT */}
+              <Text>Timeless Craft</Text>
+              <Text>Experience the art of weaving tradition into modern fashion.</Text>
+            </View>
+            <View>{/* ROW TEXT RIGHT */}
+              <Text>Modern Silhouettes</Text>
+              <Text>Embrace fluidity and express your unique style with our innovative designs.</Text>
+            </View>
           </View>
-          <View style={styles.heritageRightView}>
+          <View>{/* BUTTONS */}
+            <TouchableOpacity><Text>Shop</Text></TouchableOpacity>
+            <TouchableOpacity style={{flexDirection:'row'}}>
+              <Text>Learn More</Text>
+              <Ionicons name="chevron-down-outline"/>
+            </TouchableOpacity>
 
           </View>
         </View>
+        <View style={styles.heritageRightView}>
+          <Image
+            source={require('../assets/Placeholder Image.png')}
+            style={{
+              // position: 'absolute',
+              top: '50%',
+              left: width - 500,
+              transform: [{ translateX: -300 }, { translateY: -300 }],
+              width: 600,
+              height: 600,
+              resizeMode: 'contain',
+            }}
+          />
+        </View>
+      </View>
 
 
-      </ScrollView>
-    </View>
+    </Animated.ScrollView>
+  </View>
   );
 }
 
 const styles = StyleSheet.create({
-  heritageRightView:{
-    
-  },
-  heritageLeftView:{
+  heritageRightView: {
 
   },
-  heritageView:{
-    backgroundColor:'#FCF4E3',
-    // height:2000
+  heritageLeftView: {
+
+  },
+  heritageView: {
+    backgroundColor: '#FCF4E3',
+    height: 2000,
+    paddingTop: 160
   },
 
   container: {
@@ -299,6 +343,25 @@ const styles = StyleSheet.create({
       },
       default: {
         elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+    }),
+  },
+  navbarContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      },
+      default: {
+        elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
