@@ -33,7 +33,6 @@ export default function About() {
     }, [])
   );
 
-
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1024;
   const isDesktop = width >= 1024;
@@ -47,11 +46,7 @@ export default function About() {
   // Calculate banner height to fill viewport minus navbar
   const bannerHeight = height - navbarHeight;
 
-
-
-
   if (!fontsLoaded) { return null };
-
 
   return (<View style={styles.container}>
     {/* ANIMATED NAVBAR - Fixed Position */}
@@ -265,68 +260,166 @@ export default function About() {
         </View>
       </View>
 
-
-
-
-      {/* Heritage Section */}
-      <View style={styles.heritageView}>
-        <View style={styles.heritageLeftView}>
-          <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, fontSize: 15, marginVertical: 20, color: '#412023' }}>Heritage</Text>
-          <Text style={{ fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM, fontSize: 52, flexWrap: 'wrap', marginBottom: 25, width: 600, color: '#412023' }}>Where Tradition Meets Modern Elegance</Text>
-          <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, fontSize: 19, flexWrap: 'wrap', width: 620, marginBottom: 50, color: '#412023' }}>At BÉSHAs, we redefine traditional handloom fabrics with contemporary designs. Our pieces celebrate cultural heritage while appealing to the modern sensibility.</Text>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ justifyContent: 'flex-start' }}>{/* ROW TEXT LEFT */}
-              <Text style={{ fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, fontSize: 24, marginBottom: 13, color: '#412023' }}>Timeless Craft</Text>
-              <Text style={{ flexWrap: 'wrap', width: 280, lineHeight: 22, color: '#412023' }}>Experience the art of weaving tradition into modern fashion.</Text>
+      {/* Heritage Section - Now Responsive */}
+      <View style={[
+        styles.heritageView,
+        {
+          flexDirection: isMobile ? 'column' : 'row',
+          paddingHorizontal: isMobile ? 20 : isTablet ? 40 : 0,
+          paddingTop: isMobile ? 60 : isTablet ? 80 : 100,
+          paddingBottom: isMobile ? 80 : isTablet ? 100 : 140,
+          alignItems: isMobile ? 'flex-start' : 'center',
+          justifyContent: isMobile ? 'flex-start' : 'space-around'
+        }
+      ]}>
+        <View style={[
+          styles.heritageLeftView,
+          {
+            width: isMobile ? '100%' : isTablet ? '55%' : 'auto',
+            marginBottom: isMobile ? 40 : 0,
+          }
+        ]}>
+          <Text style={[
+            styles.heritageLabel,
+            {
+              fontSize: isMobile ? 14 : 15,
+              marginVertical: isMobile ? 15 : 20,
+            }
+          ]}>Heritage</Text>
+          
+          <Text style={[
+            styles.heritageTitle,
+            {
+              fontSize: isMobile ? 32 : isTablet ? 42 : 52,
+              width: isMobile ? '100%' : isTablet ? '100%' : 600,
+              marginBottom: isMobile ? 20 : 25,
+            }
+          ]}>Where Tradition Meets Modern Elegance</Text>
+          
+          <Text style={[
+            styles.heritageDescription,
+            {
+              fontSize: isMobile ? 16 : 19,
+              width: isMobile ? '100%' : isTablet ? '100%' : 620,
+              marginBottom: isMobile ? 30 : 50,
+              lineHeight: isMobile ? 24 : 28,
+            }
+          ]}>At BÉSHAs, we redefine traditional handloom fabrics with contemporary designs. Our pieces celebrate cultural heritage while appealing to the modern sensibility.</Text>
+          
+          <View style={[
+            styles.heritageFeatures,
+            {
+              flexDirection: isMobile ? 'column' : 'row',
+              marginBottom: isMobile ? 30 : 32,
+            }
+          ]}>
+            <View style={[
+              styles.featureItem,
+              {
+                marginBottom: isMobile ? 25 : 0,
+                width: isMobile ? '100%' : 280,
+              }
+            ]}>
+              <Text style={[
+                styles.featureTitle,
+                {
+                  fontSize: isMobile ? 20 : 24,
+                  marginBottom: isMobile ? 10 : 13,
+                }
+              ]}>Timeless Craft</Text>
+              <Text style={[
+                styles.featureDescription,
+                {
+                  width: isMobile ? '100%' : 280,
+                  lineHeight: isMobile ? 20 : 22,
+                }
+              ]}>Experience the art of weaving tradition into modern fashion.</Text>
             </View>
-            <View style={{ marginLeft: 50, justifyContent: 'flex-start' }}>{/* ROW TEXT RIGHT */}
-              <Text style={{ fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, fontSize: 24, marginBottom: 13, color: '#412023' }}>Modern Silhouettes</Text>
-              <Text style={{ flexWrap: 'wrap', width: 280, lineHeight: 22, color: '#412023' }}>Embrace fluidity and express your unique style with our innovative designs.</Text>
+            
+            <View style={[
+              styles.featureItem,
+              {
+                marginLeft: isMobile ? 0 : 50,
+                width: isMobile ? '100%' : 280,
+              }
+            ]}>
+              <Text style={[
+                styles.featureTitle,
+                {
+                  fontSize: isMobile ? 20 : 24,
+                  marginBottom: isMobile ? 10 : 13,
+                }
+              ]}>Modern Silhouettes</Text>
+              <Text style={[
+                styles.featureDescription,
+                {
+                  width: isMobile ? '100%' : 280,
+                  lineHeight: isMobile ? 20 : 22,
+                }
+              ]}>Embrace fluidity and express your unique style with our innovative designs.</Text>
             </View>
           </View>
-          <View style={{ flexDirection: 'row', marginTop: 32 }}>{/* BUTTONS */}
-            <TouchableOpacity style={{
-              borderWidth: 1,
-              borderColor: '#43282B',
-              borderRadius: 15,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <Text style={{
-                color: '#412023',
-                fontSize: 20,
-                paddingVertical: 7,
-                paddingHorizontal: 14,
-                fontWeight: '400',
-                fontFamily: FONT_FAMILIES.NUNITO_SANS
-              }}>Shop</Text>
+          
+          <View style={[
+            styles.heritageButtons,
+            {
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: isMobile ? 'flex-start' : 'center',
+            }
+          ]}>
+            <TouchableOpacity style={[
+              styles.shopButton,
+              {
+                marginBottom: isMobile ? 15 : 0,
+                paddingVertical: isMobile ? 10 : 7,
+                paddingHorizontal: isMobile ? 20 : 14,
+              }
+            ]}>
+              <Text style={[
+                styles.shopButtonText,
+                {
+                  fontSize: isMobile ? 18 : 20,
+                }
+              ]}>Shop</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ flexDirection: 'row',alignItems:'center', marginLeft:30 }}>
-              <Text style={{
-                color: '#412023',
-                fontSize: 20,
-                paddingVertical: 7,
-                paddingHorizontal: 10,
-                fontWeight: '400',
-                fontFamily: FONT_FAMILIES.NUNITO_SANS
-              }}>Learn More</Text>
-              <Ionicons name="chevron-forward-outline" size={19} color={'#412023'} />
+            
+            <TouchableOpacity style={[
+              styles.learnMoreButton,
+              {
+                marginLeft: isMobile ? 0 : 30,
+              }
+            ]}>
+              <Text style={[
+                styles.learnMoreButtonText,
+                {
+                  fontSize: isMobile ? 18 : 20,
+                  paddingVertical: isMobile ? 10 : 7,
+                  paddingHorizontal: isMobile ? 0 : 10,
+                }
+              ]}>Learn More</Text>
+              <Ionicons name="chevron-forward-outline" size={isMobile ? 18 : 19} color={'#412023'} />
             </TouchableOpacity>
-
           </View>
         </View>
-        <View style={styles.heritageRightView}>
+        
+        <View style={[
+          styles.heritageRightView,
+          {
+            width: isMobile ? '100%' : isTablet ? '45%' : 'auto',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }
+        ]}>
           <Image
             source={require('../assets/Placeholder Image.png')}
-            style={{
-              // position: 'absolute',
-              top: '50%',
-              // left: width - 500,
-              // transform: [{ translateX: -300 }, { translateY: -300 }],
-              width: 600,
-              height: 600,
-              resizeMode: 'contain',
-            }}
+            style={[
+              styles.heritageImage,
+              {
+                width: isMobile ? Math.min(width - 40, 400) : isTablet ? 450 : 600,
+                height: isMobile ? Math.min(width - 40, 400) : isTablet ? 450 : 600,
+                top: isMobile ? 0 : '50%',
+              }
+            ]}
           />
         </View>
       </View>
@@ -337,21 +430,70 @@ export default function About() {
 
 const styles = StyleSheet.create({
   heritageRightView: {
-
+    // Responsive styles handled inline
   },
   heritageLeftView: {
-
+    // Responsive styles handled inline
   },
   heritageView: {
     backgroundColor: '#FCF4E3',
-    // height: 2000,
-    paddingTop: 100,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingBottom: 140,
-    justifyContent: 'space-around'
+    // Responsive styles handled inline
   },
-
+  heritageLabel: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    color: '#412023'
+  },
+  heritageTitle: {
+    fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+    flexWrap: 'wrap',
+    color: '#412023'
+  },
+  heritageDescription: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    flexWrap: 'wrap',
+    color: '#412023'
+  },
+  heritageFeatures: {
+    // Responsive styles handled inline
+  },
+  featureItem: {
+    justifyContent: 'flex-start'
+  },
+  featureTitle: {
+    fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+    color: '#412023'
+  },
+  featureDescription: {
+    flexWrap: 'wrap',
+    color: '#412023'
+  },
+  heritageButtons: {
+    // Responsive styles handled inline
+  },
+  shopButton: {
+    borderWidth: 1,
+    borderColor: '#43282B',
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  shopButtonText: {
+    color: '#412023',
+    fontWeight: '400',
+    fontFamily: FONT_FAMILIES.NUNITO_SANS
+  },
+  learnMoreButton: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  learnMoreButtonText: {
+    color: '#412023',
+    fontWeight: '400',
+    fontFamily: FONT_FAMILIES.NUNITO_SANS
+  },
+  heritageImage: {
+    resizeMode: 'contain',
+  },
   container: {
     backgroundColor: '#FCF4E3',
     flex: 1,
