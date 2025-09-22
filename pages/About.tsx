@@ -48,7 +48,7 @@ export default function About() {
   const bannerHeight = height - navbarHeight;
 
 
-  
+
 
   if (!fontsLoaded) { return null };
 
@@ -265,27 +265,52 @@ export default function About() {
         </View>
       </View>
 
+
+
+
       {/* Heritage Section */}
       <View style={styles.heritageView}>
         <View style={styles.heritageLeftView}>
-          <Text>Heritage</Text>
-          <Text>Where Tradition Meets Modern Elegance</Text>
-          <Text>At BÉSHAs, we redefine traditional handloom fabrics with contemporary designs. Our pieces celebrate cultural heritage while appealing to the modern sensibility.</Text>
+          <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, fontSize: 15, marginVertical: 20, color: '#412023' }}>Heritage</Text>
+          <Text style={{ fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM, fontSize: 52, flexWrap: 'wrap', marginBottom: 25, width: 600, color: '#412023' }}>Where Tradition Meets Modern Elegance</Text>
+          <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, fontSize: 19, flexWrap: 'wrap', width: 620, marginBottom: 50, color: '#412023' }}>At BÉSHAs, we redefine traditional handloom fabrics with contemporary designs. Our pieces celebrate cultural heritage while appealing to the modern sensibility.</Text>
           <View style={{ flexDirection: 'row' }}>
-            <View style={{}}>{/* ROW TEXT LEFT */}
-              <Text>Timeless Craft</Text>
-              <Text>Experience the art of weaving tradition into modern fashion.</Text>
+            <View style={{ justifyContent: 'flex-start' }}>{/* ROW TEXT LEFT */}
+              <Text style={{ fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, fontSize: 24, marginBottom: 13, color: '#412023' }}>Timeless Craft</Text>
+              <Text style={{ flexWrap: 'wrap', width: 280, lineHeight: 22, color: '#412023' }}>Experience the art of weaving tradition into modern fashion.</Text>
             </View>
-            <View>{/* ROW TEXT RIGHT */}
-              <Text>Modern Silhouettes</Text>
-              <Text>Embrace fluidity and express your unique style with our innovative designs.</Text>
+            <View style={{ marginLeft: 50, justifyContent: 'flex-start' }}>{/* ROW TEXT RIGHT */}
+              <Text style={{ fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, fontSize: 24, marginBottom: 13, color: '#412023' }}>Modern Silhouettes</Text>
+              <Text style={{ flexWrap: 'wrap', width: 280, lineHeight: 22, color: '#412023' }}>Embrace fluidity and express your unique style with our innovative designs.</Text>
             </View>
           </View>
-          <View>{/* BUTTONS */}
-            <TouchableOpacity><Text>Shop</Text></TouchableOpacity>
-            <TouchableOpacity style={{flexDirection:'row'}}>
-              <Text>Learn More</Text>
-              <Ionicons name="chevron-down-outline"/>
+          <View style={{ flexDirection: 'row', marginTop: 32 }}>{/* BUTTONS */}
+            <TouchableOpacity style={{
+              borderWidth: 1,
+              borderColor: '#43282B',
+              borderRadius: 15,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Text style={{
+                color: '#412023',
+                fontSize: 20,
+                paddingVertical: 7,
+                paddingHorizontal: 14,
+                fontWeight: '400',
+                fontFamily: FONT_FAMILIES.NUNITO_SANS
+              }}>Shop</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flexDirection: 'row',alignItems:'center', marginLeft:30 }}>
+              <Text style={{
+                color: '#412023',
+                fontSize: 20,
+                paddingVertical: 7,
+                paddingHorizontal: 10,
+                fontWeight: '400',
+                fontFamily: FONT_FAMILIES.NUNITO_SANS
+              }}>Learn More</Text>
+              <Ionicons name="chevron-forward-outline" size={19} color={'#412023'} />
             </TouchableOpacity>
 
           </View>
@@ -296,8 +321,8 @@ export default function About() {
             style={{
               // position: 'absolute',
               top: '50%',
-              left: width - 500,
-              transform: [{ translateX: -300 }, { translateY: -300 }],
+              // left: width - 500,
+              // transform: [{ translateX: -300 }, { translateY: -300 }],
               width: 600,
               height: 600,
               resizeMode: 'contain',
@@ -305,8 +330,6 @@ export default function About() {
           />
         </View>
       </View>
-
-
     </Animated.ScrollView>
   </View>
   );
@@ -321,8 +344,12 @@ const styles = StyleSheet.create({
   },
   heritageView: {
     backgroundColor: '#FCF4E3',
-    height: 2000,
-    paddingTop: 160
+    // height: 2000,
+    paddingTop: 100,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 140,
+    justifyContent: 'space-around'
   },
 
   container: {
