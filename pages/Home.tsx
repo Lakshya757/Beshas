@@ -650,19 +650,7 @@ export default function Home() {
           </View>
         </View>
 
-        {/* SECOND DEMOS (kept same, but you can wrap rows into columns on mobile if needed) */}
-
-
-
-
-
-
-
-
-
-
-
-
+        {/* SECOND DEMOS */}
 
         {!isMobile && (
 
