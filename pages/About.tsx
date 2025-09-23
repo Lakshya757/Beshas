@@ -13,7 +13,7 @@ import {
   Linking,
   Alert
 } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { useScrollNavbar } from "../components/ScrollNavbar";
 import { useFonts, FONT_FAMILIES } from "../components/Fonts";
 import CustomLine from "../components/CustomLine";
@@ -121,6 +121,7 @@ const REVIEWS = [
 
 export default function About() {
   const navigation: any = useNavigation();
+  const currentScreen=useRoute().name;
   const { width, height } = useWindowDimensions();
   const [menSelected, setMenSelected] = useState(true);
   const { fontsLoaded } = useFonts();
@@ -130,7 +131,8 @@ export default function About() {
     useCallback(() => {
       if (scrollViewRef.current) {
         //@ts-ignore
-        // scrollViewRef.current.scrollTo({ y: 0, animated: false });
+        scrollViewRef.current.scrollTo({ y: 0, animated: false });
+        
       }
     }, [])
   );
@@ -267,6 +269,14 @@ export default function About() {
       </View>
     </Animated.View>
 
+    {/* NAVBAR END */}
+
+
+
+
+
+
+
     {/* SCROLLABLE CONTENT */}
     <Animated.ScrollView
       ref={scrollViewRef}
@@ -316,6 +326,8 @@ export default function About() {
               {
                 width: isMobile ? 100 : isTablet ? 130 : 150,
                 height: isMobile ? 67 : isTablet ? 87 : 100,
+                transform: [{ translateX: isMobile?-50:isTablet?-65:-75 }],
+
               }
             ]}
           />
@@ -346,8 +358,8 @@ export default function About() {
             ]}>
               Heritage reimagined{'\n'}From tradition, into tomorrow.
             </Text>
-            <View style={{ 
-              flexDirection: isMobile ? 'column' : 'row', 
+            <View style={{
+              flexDirection: isMobile ? 'column' : 'row',
               marginTop: isMobile ? 25 : 30,
               alignItems: isMobile ? 'flex-start' : 'center'
             }}>
@@ -494,7 +506,7 @@ export default function About() {
           <View style={[
             styles.heritageButtons,
             {
-              flexDirection: isMobile ? 'column' : 'row',
+              flexDirection: 'row',
               alignItems: isMobile ? 'flex-start' : 'center',
             }
           ]}>
@@ -517,7 +529,7 @@ export default function About() {
             <TouchableOpacity style={[
               styles.learnMoreButton,
               {
-                marginLeft: isMobile ? 0 : isTablet ? 25 : 30,
+                marginLeft: isMobile ? 25 : isTablet ? 25 : 30,
               }
             ]}>
               <Text style={[
@@ -556,7 +568,7 @@ export default function About() {
         styles.teamView,
         {
           paddingTop: isMobile ? 60 : isTablet ? 80 : 90,
-          paddingBottom: isMobile ? 80 : isTablet ? 100 : 120,
+          paddingBottom: isMobile ? 25 : isTablet ? 40 : 50,
           paddingHorizontal: isMobile ? 20 : isTablet ? 40 : 0,
         }
       ]}>
@@ -569,9 +581,9 @@ export default function About() {
               color: '#543236'
             }
           ]}>Together</Text>
-          <Text style={{ 
-            fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM, 
-            fontSize: isMobile ? 28 : isTablet ? 35 : 40, 
+          <Text style={{
+            fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+            fontSize: isMobile ? 28 : isTablet ? 35 : 40,
             color: '#543236',
             marginBottom: isMobile ? 10 : isTablet ? 15 : 0,
           }}>Our Team</Text>
@@ -597,7 +609,7 @@ export default function About() {
               alignItems: 'center',
               marginHorizontal: isMobile ? 15 : isTablet ? 30 : 40,
               marginVertical: isMobile ? 25 : isTablet ? 30 : 40,
-              width: isMobile ? Math.min((width - 70) / 2, 150) : isTablet ? 200 : 250,
+              width: isMobile ? Math.min((width - 70) / 2, 150) : isTablet ? 200 : 350,
             }}>
               <Image
                 source={require('../assets/about/Placeholder-Square.png')}
@@ -635,16 +647,16 @@ export default function About() {
               }}>{person.note}</Text>
 
               {/* LINKS */}
-              <View style={{ 
-                flexDirection: 'row', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                marginTop: isMobile ? 15 : isTablet ? 20 : 25 
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: isMobile ? 15 : isTablet ? 20 : 25
               }}>
                 <TouchableOpacity
-                  style={{ 
-                    marginHorizontal: isMobile ? 6 : isTablet ? 8 : 10, 
-                    outlineWidth: 0 
+                  style={{
+                    marginHorizontal: isMobile ? 6 : isTablet ? 8 : 10,
+                    outlineWidth: 0
                   }}
                   onPress={() => { handleLink(person.links.linkedin) }}
                 >
@@ -658,9 +670,9 @@ export default function About() {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={{ 
-                    marginHorizontal: isMobile ? 6 : isTablet ? 8 : 10, 
-                    outlineWidth: 0 
+                  style={{
+                    marginHorizontal: isMobile ? 6 : isTablet ? 8 : 10,
+                    outlineWidth: 0
                   }}
                   onPress={() => { handleLink(person.links.twitter) }}
                 >
@@ -674,9 +686,9 @@ export default function About() {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={{ 
-                    marginHorizontal: isMobile ? 6 : isTablet ? 8 : 10, 
-                    outlineWidth: 0 
+                  style={{
+                    marginHorizontal: isMobile ? 6 : isTablet ? 8 : 10,
+                    outlineWidth: 0
                   }}
                   onPress={() => { handleLink(person.links.dribble) }}
                 >
@@ -694,9 +706,9 @@ export default function About() {
         </View>
 
         {/* FOOTING - Responsive */}
-        <View style={{ 
-          alignItems: 'center', 
-          justifyContent: 'center', 
+        <View style={{
+          alignItems: 'center',
+          justifyContent: 'center',
           marginTop: isMobile ? 40 : isTablet ? 60 : 80,
           paddingHorizontal: isMobile ? 20 : 0,
         }}>
@@ -736,9 +748,9 @@ export default function About() {
           length={width}
           color="#E85A4F"
           thickness={isMobile ? 3 : 4}
-          style={{ 
-            marginTop: isMobile ? 30 : isTablet ? 80 : 140, 
-            marginBottom: isMobile ? 7 : 9.5 
+          style={{
+            marginTop: isMobile ? 30 : isTablet ? 80 : 140,
+            marginBottom: isMobile ? 7 : 9.5
           }}
         />
         <CustomLine
@@ -749,9 +761,9 @@ export default function About() {
       </View>
 
       {/* Reviews Carousel - Pass responsive props */}
-      <ReviewsCarousel 
-        reviews={REVIEWS} 
-        isMobile={isMobile} 
+      <ReviewsCarousel
+        reviews={REVIEWS}
+        isMobile={isMobile}
         isTablet={isTablet}
         width={width}
       />
@@ -776,14 +788,16 @@ export default function About() {
           styles.discover,
           {
             flexDirection: isMobile ? 'column' : 'row',
-            marginTop: isMobile ? 35 : isTablet ? 60 : 90,
             paddingHorizontal: isMobile ? 20 : isTablet ? 40 : 80,
-            paddingBottom: isMobile ? 40 : isTablet ? 60 : 0,
+            // paddingBottom: isMobile ? 40 : isTablet ? 60 : 0,
+            paddingVertical: 110,
+            paddingBottom:isMobile?-60:0
+
           },
         ]}
       >
-        <View style={{ 
-          justifyContent: 'center', 
+        <View style={{
+          justifyContent: 'center',
           alignItems: isMobile ? 'center' : 'flex-start',
           width: isMobile ? '100%' : isTablet ? '55%' : '50%',
           marginBottom: isMobile ? 30 : 0,
@@ -837,8 +851,8 @@ export default function About() {
                 minWidth: isMobile ? 120 : 'auto',
               }}
             >
-              <Text style={{ 
-                color: '#0C0B04', 
+              <Text style={{
+                color: '#0C0B04',
                 fontSize: isMobile ? 15 : 16,
                 fontFamily: FONT_FAMILIES.NUNITO_SANS,
               }}>Shop</Text>
@@ -855,25 +869,23 @@ export default function About() {
                 minWidth: isMobile ? 120 : 'auto',
               }}
             >
-              <Text style={{ 
-                color: '#0C0B04', 
+              <Text style={{
+                color: '#0C0B04',
                 fontSize: isMobile ? 15 : 16,
                 fontFamily: FONT_FAMILIES.NUNITO_SANS,
               }}>Contact</Text>
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{ 
-          justifyContent: 'center', 
-          alignItems: 'center',
-          width: isMobile ? '100%' : isTablet ? '45%' : '50%',
+        <View style={{
+          justifyContent: 'center', marginTop: isMobile ? 0 : 0
         }}>
           <Image
             source={require('../assets/home/CTA/Placeholder Image.png')}
             style={{
-              height: isMobile ? 250 : isTablet ? 400 : 550,
-              width: isMobile ? Math.min(width - 40, 300) : 'auto',
               resizeMode: 'contain',
+              width: isMobile ? 365 : isTablet ? 450 : 600
+              // height: isMobile ? 250 : isTablet ? 400 : 550,
             }}
           />
         </View>
@@ -1057,7 +1069,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     alignSelf: 'center',
     left: '50%',
-    transform: [{ translateX: -75 }],
+    
   },
   heroTextContainer: {
     position: 'absolute',

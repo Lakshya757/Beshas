@@ -9,17 +9,54 @@ import {
   TextInput,
   Platform,
 } from "react-native";
-
+import { useFocusEffect, useNavigation, useRoute, CommonActions } from "@react-navigation/native";
 import { useFonts, FONT_FAMILIES } from "../components/Fonts";
 import CustomLine from "./CustomLine";
 
 export default function Footer() {
+  const navigation: any = useNavigation();
+  const currentScreen: any = useRoute().name;
+
   const { fontsLoaded } = useFonts();
   const { width } = useWindowDimensions();
 
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1024;
   const isDesktop = width >= 1024;
+
+
+
+
+  const handlePress = (item: string) => {
+    switch (item) {
+      case "About Us":
+        navigation.navigate("About")
+        if (currentScreen == "About") {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: currentScreen }], // 👈 replace with your screen name
+            })
+          );
+        }
+        break;
+      case "Shop Now":
+        // navigation.navigate("ShopScreen");
+        break;
+      case "Our Story":
+        // navigation.navigate("StoryScreen");x
+        break;
+      case "Contact Us":
+        // navigation.navigate("ContactScreen");
+        break;
+      case "FAQs":
+        // navigation.navigate("FaqScreen");
+        break;
+    }
+  };
+
+
+
 
   if (!fontsLoaded) return null;
 
@@ -59,13 +96,16 @@ export default function Footer() {
             ]}
           >
             <Text style={styles.colTopText}>Connect With Us</Text>
-            {["About Us", "Shop Now", "Our Story", "Contact Us", "FAQs"].map(
-              (item, i) => (
-                <TouchableOpacity key={i} style={styles.colTopButton}>
-                  <Text style={styles.colTopButtonText}>{item}</Text>
-                </TouchableOpacity>
-              )
-            )}
+            {["About Us", "Shop Now", "Our Story", "Contact Us", "FAQs"].map((item, i) => (
+              <TouchableOpacity
+                key={i}   // ✅ add this
+                style={styles.colTopButton}
+                onPress={() => handlePress(item)}
+
+              >
+                <Text style={styles.colTopButtonText}>{item}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
 
           {/* Follow Us */}
@@ -244,27 +284,27 @@ export default function Footer() {
             flexDirection: "row",
             justifyContent: "center",
           }}
-        >          <TouchableOpacity style={{marginHorizontal:10}}>
+        >          <TouchableOpacity style={{ marginHorizontal: 10 }}>
             <Image
               source={require('../assets/home/Footer/fb.svg')}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={{marginHorizontal:10}}>
+          <TouchableOpacity style={{ marginHorizontal: 10 }}>
             <Image
               source={require('../assets/home/Footer/insta.svg')}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={{marginHorizontal:10}}>
+          <TouchableOpacity style={{ marginHorizontal: 10 }}>
             <Image
               source={require('../assets/home/Footer/twitter.svg')}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={{marginHorizontal:10}}>
+          <TouchableOpacity style={{ marginHorizontal: 10 }}>
             <Image
               source={require('../assets/home/Footer/linkedin.svg')}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={{marginHorizontal:10}}>
+          <TouchableOpacity style={{ marginHorizontal: 10 }}>
             <Image
               source={require('../assets/home/Footer/yt.svg')}
             />

@@ -918,6 +918,7 @@ export default function Home() {
               </TouchableOpacity>
             </View>
           </View>
+          
           <View style={{ justifyContent: 'center', marginTop: isMobile ? 30 : 0 }}>
             <Image
               source={require('../assets/home/CTA/Placeholder Image.png')}
