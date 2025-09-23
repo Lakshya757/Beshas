@@ -3,10 +3,13 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, useWindowDimensions, A
 import { Ionicons } from '@expo/vector-icons';
 import { FONT_FAMILIES } from '../components/Fonts';
 
-const ReviewsCarousel = ({ reviews }: any) => {
+const ReviewsCarousel = ({ reviews, isMobile, isTablet, width }: any) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { width } = useWindowDimensions();
-  const isMobile = width < 768;
+  
+  // Use passed props or calculate if not provided
+  const _isMobile = isMobile !== undefined ? isMobile : width < 768;
+  const _isTablet = isTablet !== undefined ? isTablet : width >= 768 && width < 1024;
+  const _isDesktop = !_isMobile && !_isTablet;
 
   // Animation values
   const slideAnim = useRef(new Animated.Value(0)).current;
@@ -84,14 +87,39 @@ const ReviewsCarousel = ({ reviews }: any) => {
   const currentReview = reviews[currentIndex];
 
   return (
-    <View style={[styles.reviewsContainer, { paddingHorizontal: isMobile ? 20 : 60 }]}>
-      <View style={styles.reviewContent}>
+    <View style={[
+      styles.reviewsContainer, 
+      { 
+        paddingHorizontal: _isMobile ? 20 : _isTablet ? 40 : 60,
+        paddingVertical: _isMobile ? 60 : _isTablet ? 75 : 90,
+      }
+    ]}>
+      <View style={[
+        styles.reviewContent,
+        {
+          minHeight: _isMobile ? 180 : _isTablet ? 200 : 220,
+          marginBottom: _isMobile ? 25 : 30,
+        }
+      ]}>
         {/* Left Arrow */}
         <TouchableOpacity
-          style={[styles.arrowButton, styles.leftArrow]}
+          style={[
+            styles.arrowButton, 
+            styles.leftArrow,
+            {
+              width: _isMobile ? 35 : _isTablet ? 38 : 40,
+              height: _isMobile ? 35 : _isTablet ? 38 : 40,
+              borderRadius: _isMobile ? 17.5 : _isTablet ? 19 : 20,
+              marginHorizontal: _isMobile ? 10 : _isTablet ? 15 : 20,
+            }
+          ]}
           onPress={prevReview}
         >
-          <Ionicons name="chevron-back" size={24} color="#8B6F47" />
+          <Ionicons 
+            name="chevron-back" 
+            size={_isMobile ? 20 : _isTablet ? 22 : 24} 
+            color="#8B6F47" 
+          />
         </TouchableOpacity>
 
         {/* Animated Review Content */}
@@ -99,7 +127,8 @@ const ReviewsCarousel = ({ reviews }: any) => {
           style={[
             styles.reviewCard,
             {
-              maxWidth: isMobile ? width - 120 : 750,
+              maxWidth: _isMobile ? width - 100 : _isTablet ? 650 : 750,
+              minWidth: _isMobile ? width - 100 : _isTablet ? 500 : 600,
               opacity: fadeAnim,
               transform: [
                 { translateX: slideAnim },
@@ -108,8 +137,15 @@ const ReviewsCarousel = ({ reviews }: any) => {
             }
           ]}
         >
-              
-          <Text style={[styles.reviewText, { fontSize: isMobile ? 18 : 21, maxWidth: isMobile ? width - 120 : 660, }]}>
+          <Text style={[
+            styles.reviewText, 
+            { 
+              fontSize: _isMobile ? 16 : _isTablet ? 18 : 21,
+              maxWidth: _isMobile ? width - 100 : _isTablet ? 580 : 660,
+              lineHeight: _isMobile ? 22 : _isTablet ? 24 : 26,
+              marginBottom: _isMobile ? 25 : _isTablet ? 28 : 30,
+            }
+          ]}>
             {currentReview.reviewText}
           </Text>
 
@@ -117,13 +153,32 @@ const ReviewsCarousel = ({ reviews }: any) => {
           <View style={styles.authorContainer}>
             <Image
               source={{ uri: currentReview.autherPfp }}
-              style={styles.authorImage}
+              style={[
+                styles.authorImage,
+                {
+                  width: _isMobile ? 50 : _isTablet ? 55 : 60,
+                  height: _isMobile ? 50 : _isTablet ? 55 : 60,
+                  borderRadius: _isMobile ? 25 : _isTablet ? 27.5 : 30,
+                  marginBottom: _isMobile ? 12 : _isTablet ? 13 : 15,
+                }
+              ]}
             />
             <View style={styles.authorInfo}>
-              <Text style={[styles.authorName, { fontSize: isMobile ? 16 : 17 }]}>
+              <Text style={[
+                styles.authorName, 
+                { 
+                  fontSize: _isMobile ? 15 : _isTablet ? 16 : 17,
+                  marginBottom: _isMobile ? 3 : 5,
+                }
+              ]}>
                 {currentReview.author}
               </Text>
-              <Text style={[styles.authorRole, { fontSize: isMobile ? 14 : 15 }]}>
+              <Text style={[
+                styles.authorRole, 
+                { 
+                  fontSize: _isMobile ? 13 : _isTablet ? 14 : 15 
+                }
+              ]}>
                 {currentReview.authorRole}
               </Text>
             </View>
@@ -132,10 +187,23 @@ const ReviewsCarousel = ({ reviews }: any) => {
 
         {/* Right Arrow */}
         <TouchableOpacity
-          style={[styles.arrowButton, styles.rightArrow]}
+          style={[
+            styles.arrowButton, 
+            styles.rightArrow,
+            {
+              width: _isMobile ? 35 : _isTablet ? 38 : 40,
+              height: _isMobile ? 35 : _isTablet ? 38 : 40,
+              borderRadius: _isMobile ? 17.5 : _isTablet ? 19 : 20,
+              marginHorizontal: _isMobile ? 10 : _isTablet ? 15 : 20,
+            }
+          ]}
           onPress={nextReview}
         >
-          <Ionicons name="chevron-forward" size={24} color="#8B6F47" />
+          <Ionicons 
+            name="chevron-forward" 
+            size={_isMobile ? 20 : _isTablet ? 22 : 24} 
+            color="#8B6F47" 
+          />
         </TouchableOpacity>
       </View>
 
@@ -149,6 +217,12 @@ const ReviewsCarousel = ({ reviews }: any) => {
               key={index}
               style={[
                 styles.paginationDot,
+                {
+                  width: _isMobile ? 10 : _isTablet ? 11 : 12,
+                  height: _isMobile ? 10 : _isTablet ? 11 : 12,
+                  borderRadius: _isMobile ? 5 : _isTablet ? 5.5 : 6,
+                  marginHorizontal: _isMobile ? 4 : _isTablet ? 5 : 6,
+                },
                 isActive ? styles.activeDot : styles.inactiveDot
               ]}
               onPress={() => goToReview(index)}
@@ -157,6 +231,9 @@ const ReviewsCarousel = ({ reviews }: any) => {
                 style={[
                   styles.dotInner,
                   {
+                    width: _isMobile ? 6 : _isTablet ? 7 : 8,
+                    height: _isMobile ? 6 : _isTablet ? 7 : 8,
+                    borderRadius: _isMobile ? 3 : _isTablet ? 3.5 : 4,
                     backgroundColor: isActive ? '#8B6F47' : 'rgba(139, 111, 71, 0.3)',
                     transform: [
                       {
@@ -177,7 +254,6 @@ const ReviewsCarousel = ({ reviews }: any) => {
 const styles = StyleSheet.create({
   reviewsContainer: {
     backgroundColor: '#FCF4E3',
-    paddingVertical: 90,
     alignItems: 'center',
   },
   reviewContent: {
@@ -185,18 +261,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    marginBottom: 30,
-    minHeight: 200, // Ensure consistent height during animations
   },
   arrowButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
     backgroundColor: 'rgba(139, 111, 71, 0.1)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 20,
-    // Add subtle hover effect
     shadowColor: '#8B6F47',
     shadowOffset: {
       width: 0,
@@ -206,33 +275,22 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  leftArrow: {
-    // Additional styling if needed
-  },
-  rightArrow: {
-    // Additional styling if needed
-  },
+  leftArrow: {},
+  rightArrow: {},
   reviewCard: {
     alignItems: 'center',
     paddingHorizontal: 20,
+    flex: 1,
   },
   reviewText: {
     fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
     color: '#2C3540',
     textAlign: 'center',
-    lineHeight: 26,
-    marginBottom: 30,
-    
   },
   authorContainer: {
     alignItems: 'center',
   },
   authorImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginBottom: 15,
-    // Add subtle border
     borderWidth: 2,
     borderColor: 'rgba(139, 111, 71, 0.2)',
   },
@@ -243,7 +301,6 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILIES.FUTURA_BOOK,
     color: '#2C3540',
     fontWeight: '600',
-    marginBottom: 5,
   },
   authorRole: {
     fontFamily: FONT_FAMILIES.FUTURA_BOOK,
@@ -255,24 +312,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   paginationDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginHorizontal: 6,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  dotInner: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  activeDot: {
-    // Styling handled by animated view
-  },
-  inactiveDot: {
-    // Styling handled by animated view
-  },
+  dotInner: {},
+  activeDot: {},
+  inactiveDot: {},
 });
 
 export default ReviewsCarousel;

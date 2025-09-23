@@ -140,7 +140,7 @@ export default function About() {
   const isDesktop = width >= 1024;
 
   // Calculate navbar height
-  const navbarHeight = isDesktop ? 80 : 60;
+  const navbarHeight = isDesktop ? 80 : isMobile ? 60 : 70;
 
   // Add the scroll navbar hook
   const { handleScroll, navbarTranslateY, isNavbarVisible } = useScrollNavbar(navbarHeight);
@@ -148,10 +148,7 @@ export default function About() {
   // Calculate banner height to fill viewport minus navbar
   const bannerHeight = height - navbarHeight;
 
-
-
   const handleLink = async (url: any) => {
-
     // Check if the URL can be opened
     const supported = await Linking.canOpenURL(url);
 
@@ -161,10 +158,6 @@ export default function About() {
       Alert.alert(`Don't know how to open this URL: ${url}`);
     }
   };
-
-
-
-
 
   if (!fontsLoaded) { return null };
 
@@ -184,7 +177,7 @@ export default function About() {
           styles.navbar,
           {
             height: navbarHeight,
-            paddingHorizontal: isMobile ? 15 : 70,
+            paddingHorizontal: isMobile ? 15 : isTablet ? 50 : 70,
             flexDirection: isMobile ? 'column' : 'row',
             paddingVertical: isMobile ? 10 : 0,
           },
@@ -204,8 +197,8 @@ export default function About() {
             style={[
               styles.logo,
               {
-                height: isDesktop ? 100 : isMobile ? 25 : 40,
-                marginHorizontal: isMobile ? 0 : 30,
+                height: isDesktop ? 100 : isTablet ? 50 : 25,
+                marginHorizontal: isMobile ? 0 : isTablet ? 20 : 30,
               },
             ]}
             resizeMode="contain"
@@ -216,10 +209,10 @@ export default function About() {
             </TouchableOpacity>
           )}
           {!isMobile && (
-            <View style={[styles.seachView, { left: isMobile ? 0 : 35 }]}>
-              <Ionicons name="search-outline" size={24} color={'#FFFFFF'} />
+            <View style={[styles.seachView, { left: isMobile ? 0 : isTablet ? 25 : 35 }]}>
+              <Ionicons name="search-outline" size={isTablet ? 22 : 24} color={'#FFFFFF'} />
               <TextInput
-                style={styles.searchTextInput}
+                style={[styles.searchTextInput, { fontSize: isTablet ? 16 : 18 }]}
                 placeholder="Search"
                 placeholderTextColor={'white'}
               />
@@ -259,7 +252,7 @@ export default function About() {
 
             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>Shop Now</Text>
-              <Ionicons name="chevron-down-outline" color={'white'} size={20} />
+              <Ionicons name="chevron-down-outline" color={'white'} size={isTablet ? 18 : 20} />
             </TouchableOpacity>
             <View style={styles.account}>
               <TouchableOpacity>
@@ -318,110 +311,127 @@ export default function About() {
 
           <Image
             source={require('../assets/about/thumb.png')}
-            style={styles.thumbImage}
+            style={[
+              styles.thumbImage,
+              {
+                width: isMobile ? 100 : isTablet ? 130 : 150,
+                height: isMobile ? 67 : isTablet ? 87 : 100,
+              }
+            ]}
           />
 
           <View style={[
             styles.heroTextContainer,
             {
-              left: isMobile ? 30 : 120,
-              width: isMobile ? width - 60 : 'auto',
+              left: isMobile ? 20 : isTablet ? 60 : 120,
+              width: isMobile ? width - 40 : isTablet ? width - 120 : 'auto',
             }
           ]}>
             <Text style={[
               styles.heroText,
               {
-                fontSize: isMobile ? 36 : isTablet ? 56 : 72,
-                width: isMobile ? width - 60 : 500,
+                fontSize: isMobile ? 28 : isTablet ? 48 : 72,
+                width: isMobile ? width - 40 : isTablet ? width - 120 : 500,
               }
             ]}>
               Embrace Tradition with a Modern Twist
             </Text>
-            <Text style={styles.subHeroText}>
+            <Text style={[
+              styles.subHeroText,
+              {
+                fontSize: isMobile ? 18 : isTablet ? 22 : 24,
+                lineHeight: isMobile ? 24 : isTablet ? 28 : 31,
+                marginTop: isMobile ? 20 : 25,
+              }
+            ]}>
               Heritage reimagined{'\n'}From tradition, into tomorrow.
             </Text>
-            <View style={{ flexDirection: 'row', marginTop: 30 }}>
-              <TouchableOpacity style={{
-                borderWidth: 1,
-                borderColor: 'white',
-                borderRadius: 15,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <Text style={{
-                  color: 'white',
-                  fontSize: 20,
-                  paddingVertical: 8,
-                  paddingHorizontal: 15,
-                  fontWeight: '400',
-                  fontFamily: FONT_FAMILIES.NUNITO_SANS
-                }}>Shop</Text>
+            <View style={{ 
+              flexDirection: isMobile ? 'column' : 'row', 
+              marginTop: isMobile ? 25 : 30,
+              alignItems: isMobile ? 'flex-start' : 'center'
+            }}>
+              <TouchableOpacity style={[
+                styles.bannerButton,
+                styles.bannerButtonPrimary,
+                {
+                  marginBottom: isMobile ? 15 : 0,
+                  marginRight: isMobile ? 0 : 20,
+                  paddingVertical: isMobile ? 10 : 8,
+                  paddingHorizontal: isMobile ? 20 : 15,
+                }
+              ]}>
+                <Text style={[
+                  styles.bannerButtonText,
+                  {
+                    fontSize: isMobile ? 18 : 20,
+                  }
+                ]}>Shop</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={{
-                borderWidth: 1,
-                borderColor: 'rgba(255,255,255,0.2)',
-                borderRadius: 15,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginHorizontal: 20
-              }}>
-                <Text style={{
-                  color: 'white',
-                  fontSize: 20,
-                  paddingVertical: 8,
-                  paddingHorizontal: 15,
-                  fontWeight: '400',
-                  fontFamily: FONT_FAMILIES.NUNITO_SANS
-                }}>Learn More</Text>
+              <TouchableOpacity style={[
+                styles.bannerButton,
+                styles.bannerButtonSecondary,
+                {
+                  paddingVertical: isMobile ? 10 : 8,
+                  paddingHorizontal: isMobile ? 20 : 15,
+                }
+              ]}>
+                <Text style={[
+                  styles.bannerButtonText,
+                  {
+                    fontSize: isMobile ? 18 : 20,
+                  }
+                ]}>Learn More</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </View>
 
-      {/* Heritage Section - Now Responsive */}
+      {/* Heritage Section - Fully Responsive */}
       <View style={[
         styles.heritageView,
         {
           flexDirection: isMobile ? 'column' : 'row',
-          paddingHorizontal: isMobile ? 20 : isTablet ? 40 : 0,
-          paddingTop: isMobile ? 60 : isTablet ? 80 : 100,
-          paddingBottom: isMobile ? 80 : isTablet ? 100 : 140,
+          paddingHorizontal: isMobile ? 20 : isTablet ? 40 : 80,
+          paddingTop: isMobile ? 50 : isTablet ? 70 : 100,
+          paddingBottom: isMobile ? 60 : isTablet ? 80 : 140,
           alignItems: isMobile ? 'flex-start' : 'center',
-          justifyContent: isMobile ? 'flex-start' : 'space-around'
+          justifyContent: isMobile ? 'flex-start' : 'space-between'
         }
       ]}>
         <View style={[
           {
-            width: isMobile ? '100%' : isTablet ? '55%' : 'auto',
+            width: isMobile ? '100%' : isTablet ? '55%' : '50%',
             marginBottom: isMobile ? 40 : 0,
           }
         ]}>
           <Text style={[
             styles.heritageLabel,
             {
-              fontSize: isMobile ? 14 : 15,
-              marginVertical: isMobile ? 15 : 20,
+              fontSize: isMobile ? 14 : isTablet ? 15 : 15,
+              marginVertical: isMobile ? 12 : isTablet ? 15 : 20,
             }
           ]}>Heritage</Text>
 
           <Text style={[
             styles.heritageTitle,
             {
-              fontSize: isMobile ? 32 : isTablet ? 42 : 52,
+              fontSize: isMobile ? 28 : isTablet ? 38 : 52,
               width: isMobile ? '100%' : isTablet ? '100%' : 600,
-              marginBottom: isMobile ? 20 : 25,
+              marginBottom: isMobile ? 18 : isTablet ? 22 : 25,
+              lineHeight: isMobile ? 34 : isTablet ? 44 : 58,
             }
           ]}>Where Tradition Meets Modern Elegance</Text>
 
           <Text style={[
             styles.heritageDescription,
             {
-              fontSize: isMobile ? 16 : 19,
+              fontSize: isMobile ? 15 : isTablet ? 17 : 19,
               width: isMobile ? '100%' : isTablet ? '100%' : 620,
-              marginBottom: isMobile ? 30 : 50,
-              lineHeight: isMobile ? 24 : 28,
+              marginBottom: isMobile ? 25 : isTablet ? 35 : 50,
+              lineHeight: isMobile ? 22 : isTablet ? 25 : 28,
             }
           ]}>At BÉSHAs, we redefine traditional handloom fabrics with contemporary designs. Our pieces celebrate cultural heritage while appealing to the modern sensibility.</Text>
 
@@ -429,28 +439,30 @@ export default function About() {
             styles.heritageFeatures,
             {
               flexDirection: isMobile ? 'column' : 'row',
-              marginBottom: isMobile ? 30 : 32,
+              marginBottom: isMobile ? 25 : isTablet ? 28 : 32,
             }
           ]}>
             <View style={[
               styles.featureItem,
               {
-                marginBottom: isMobile ? 25 : 0,
-                width: isMobile ? '100%' : 280,
+                marginBottom: isMobile ? 20 : 0,
+                width: isMobile ? '100%' : isTablet ? '45%' : 280,
+                marginRight: isMobile ? 0 : isTablet ? 20 : 50,
               }
             ]}>
               <Text style={[
                 styles.featureTitle,
                 {
-                  fontSize: isMobile ? 20 : 24,
-                  marginBottom: isMobile ? 10 : 13,
+                  fontSize: isMobile ? 18 : isTablet ? 20 : 24,
+                  marginBottom: isMobile ? 8 : isTablet ? 10 : 13,
                 }
               ]}>Timeless Craft</Text>
               <Text style={[
                 styles.featureDescription,
                 {
-                  width: isMobile ? '100%' : 280,
-                  lineHeight: isMobile ? 20 : 22,
+                  width: isMobile ? '100%' : isTablet ? '100%' : 280,
+                  lineHeight: isMobile ? 20 : isTablet ? 21 : 22,
+                  fontSize: isMobile ? 14 : 15,
                 }
               ]}>Experience the art of weaving tradition into modern fashion.</Text>
             </View>
@@ -458,22 +470,22 @@ export default function About() {
             <View style={[
               styles.featureItem,
               {
-                marginLeft: isMobile ? 0 : 50,
-                width: isMobile ? '100%' : 280,
+                width: isMobile ? '100%' : isTablet ? '45%' : 280,
               }
             ]}>
               <Text style={[
                 styles.featureTitle,
                 {
-                  fontSize: isMobile ? 20 : 24,
-                  marginBottom: isMobile ? 10 : 13,
+                  fontSize: isMobile ? 18 : isTablet ? 20 : 24,
+                  marginBottom: isMobile ? 8 : isTablet ? 10 : 13,
                 }
               ]}>Modern Silhouettes</Text>
               <Text style={[
                 styles.featureDescription,
                 {
-                  width: isMobile ? '100%' : 280,
-                  lineHeight: isMobile ? 20 : 22,
+                  width: isMobile ? '100%' : isTablet ? '100%' : 280,
+                  lineHeight: isMobile ? 20 : isTablet ? 21 : 22,
+                  fontSize: isMobile ? 14 : 15,
                 }
               ]}>Embrace fluidity and express your unique style with our innovative designs.</Text>
             </View>
@@ -490,14 +502,14 @@ export default function About() {
               styles.shopButton,
               {
                 marginBottom: isMobile ? 15 : 0,
-                paddingVertical: isMobile ? 10 : 7,
-                paddingHorizontal: isMobile ? 20 : 14,
+                paddingVertical: isMobile ? 10 : isTablet ? 8 : 7,
+                paddingHorizontal: isMobile ? 18 : isTablet ? 16 : 14,
               }
             ]}>
               <Text style={[
                 styles.shopButtonText,
                 {
-                  fontSize: isMobile ? 18 : 20,
+                  fontSize: isMobile ? 16 : isTablet ? 18 : 20,
                 }
               ]}>Shop</Text>
             </TouchableOpacity>
@@ -505,278 +517,371 @@ export default function About() {
             <TouchableOpacity style={[
               styles.learnMoreButton,
               {
-                marginLeft: isMobile ? 0 : 30,
+                marginLeft: isMobile ? 0 : isTablet ? 25 : 30,
               }
             ]}>
               <Text style={[
                 styles.learnMoreButtonText,
                 {
-                  fontSize: isMobile ? 18 : 20,
-                  paddingVertical: isMobile ? 10 : 7,
+                  fontSize: isMobile ? 16 : isTablet ? 18 : 20,
+                  paddingVertical: isMobile ? 10 : isTablet ? 8 : 7,
                   paddingHorizontal: isMobile ? 0 : 10,
                 }
               ]}>Learn More</Text>
-              <Ionicons name="chevron-forward-outline" size={isMobile ? 18 : 19} color={'#412023'} />
+              <Ionicons name="chevron-forward-outline" size={isMobile ? 16 : isTablet ? 17 : 19} color={'#412023'} />
             </TouchableOpacity>
           </View>
         </View>
 
         <View style={{
-          width: isMobile ? '100%' : isTablet ? '45%' : 'auto',
+          width: isMobile ? '100%' : isTablet ? '45%' : '50%',
           alignItems: 'center',
           justifyContent: 'center',
-        }
-        }>
+        }}>
           <Image
             source={require('../assets/Placeholder Image.png')}
             style={[
               styles.heritageImage,
               {
-                width: isMobile ? Math.min(width - 40, 400) : isTablet ? 450 : 600,
-                height: isMobile ? Math.min(width - 40, 400) : isTablet ? 450 : 600,
-                top: isMobile ? 0 : '50%',
+                width: isMobile ? Math.min(width - 40, 350) : isTablet ? 380 : 500,
+                height: isMobile ? Math.min(width - 40, 350) : isTablet ? 380 : 500,
               }
             ]}
           />
         </View>
       </View>
 
-
-      {/* TEAM VIEW */}
-      <View style={styles.teamView}>
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>{/* HEADING*/}
+      {/* TEAM VIEW - Fully Responsive */}
+      <View style={[
+        styles.teamView,
+        {
+          paddingTop: isMobile ? 60 : isTablet ? 80 : 90,
+          paddingBottom: isMobile ? 80 : isTablet ? 100 : 120,
+          paddingHorizontal: isMobile ? 20 : isTablet ? 40 : 0,
+        }
+      ]}>
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Text style={[
             styles.heritageLabel,
             {
-              fontSize: isMobile ? 16 : 17,
-              marginVertical: isMobile ? 15 : 20,
+              fontSize: isMobile ? 15 : isTablet ? 16 : 17,
+              marginVertical: isMobile ? 12 : isTablet ? 15 : 20,
               color: '#543236'
             }
           ]}>Together</Text>
-          <Text style={{ fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM, fontSize: 40, color: '#543236' }}>Our Team</Text>
+          <Text style={{ 
+            fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM, 
+            fontSize: isMobile ? 28 : isTablet ? 35 : 40, 
+            color: '#543236',
+            marginBottom: isMobile ? 10 : isTablet ? 15 : 0,
+          }}>Our Team</Text>
           <Text style={[
             styles.heritageLabel,
             {
-              fontSize: isMobile ? 16 : 17,
-              marginVertical: isMobile ? 15 : 25,
+              fontSize: isMobile ? 15 : isTablet ? 16 : 17,
+              marginVertical: isMobile ? 12 : isTablet ? 15 : 25,
+              textAlign: 'center',
+              maxWidth: isMobile ? width - 40 : 600,
             }
           ]}>Meet the passionate individuals behind BÉSHAs.</Text>
         </View>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>{/* PEOPLE */}
+
+        <View style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          marginTop: isMobile ? 20 : isTablet ? 30 : 40,
+        }}>
           {THE_TEAM.map((person, index) => (
-            <View style={{ alignItems: 'center', marginHorizontal: 60, marginVertical: 40 }}>
+            <View key={index} style={{
+              alignItems: 'center',
+              marginHorizontal: isMobile ? 15 : isTablet ? 30 : 40,
+              marginVertical: isMobile ? 25 : isTablet ? 30 : 40,
+              width: isMobile ? Math.min((width - 70) / 2, 150) : isTablet ? 200 : 250,
+            }}>
               <Image
                 source={require('../assets/about/Placeholder-Square.png')}
                 resizeMode="contain"
                 style={{
-                  width: 300
+                  width: isMobile ? Math.min((width - 70) / 2, 150) : isTablet ? 200 : 250,
+                  height: isMobile ? Math.min((width - 70) / 2, 150) : isTablet ? 200 : 250,
                 }}
               />
               <Text style={{
-                marginTop: 28,
-                fontSize: 22,
+                marginTop: isMobile ? 15 : isTablet ? 20 : 28,
+                fontSize: isMobile ? 16 : isTablet ? 18 : 22,
                 fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
-                color: '#543236'
+                color: '#543236',
+                textAlign: 'center',
               }}>{person.name}</Text>
               <Text style={{
-                marginTop: 7,
-                fontSize: 17,
+                marginTop: isMobile ? 4 : isTablet ? 5 : 7,
+                fontSize: isMobile ? 13 : isTablet ? 15 : 17,
                 fontFamily: FONT_FAMILIES.FUTURA_BOOK,
                 color: '#543236',
-                fontWeight: "100"
+                fontWeight: "100",
+                textAlign: 'center',
               }}>{person.role}</Text>
               <Text style={{
-                marginTop: 20,
-                fontSize: 15,
+                marginTop: isMobile ? 12 : isTablet ? 15 : 20,
+                fontSize: isMobile ? 12 : isTablet ? 13 : 15,
                 fontFamily: FONT_FAMILIES.FUTURA_BOOK,
                 color: '#543236',
                 fontWeight: "100",
                 flexWrap: 'wrap',
-                width: 330,
-                textAlign: 'center'
+                width: isMobile ? Math.min((width - 70) / 2, 150) : isTablet ? 200 : 280,
+                textAlign: 'center',
+                lineHeight: isMobile ? 16 : isTablet ? 18 : 20,
               }}>{person.note}</Text>
 
               {/* LINKS */}
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 25 }}>
-                <TouchableOpacity //LINKEDIN 
-                  style={{ marginHorizontal: 10, outlineWidth: 0 }}
+              <View style={{ 
+                flexDirection: 'row', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                marginTop: isMobile ? 15 : isTablet ? 20 : 25 
+              }}>
+                <TouchableOpacity
+                  style={{ 
+                    marginHorizontal: isMobile ? 6 : isTablet ? 8 : 10, 
+                    outlineWidth: 0 
+                  }}
                   onPress={() => { handleLink(person.links.linkedin) }}
                 >
                   <Image
                     source={require('../assets/about/linkedin.svg')}
+                    style={{
+                      width: isMobile ? 20 : isTablet ? 22 : 24,
+                      height: isMobile ? 20 : isTablet ? 22 : 24,
+                    }}
                   />
                 </TouchableOpacity>
 
-                <TouchableOpacity //TWITTER
-                  style={{ marginHorizontal: 10, outlineWidth: 0 }}
+                <TouchableOpacity
+                  style={{ 
+                    marginHorizontal: isMobile ? 6 : isTablet ? 8 : 10, 
+                    outlineWidth: 0 
+                  }}
                   onPress={() => { handleLink(person.links.twitter) }}
                 >
                   <Image
                     source={require('../assets/about/twitter.svg')}
+                    style={{
+                      width: isMobile ? 20 : isTablet ? 22 : 24,
+                      height: isMobile ? 20 : isTablet ? 22 : 24,
+                    }}
                   />
                 </TouchableOpacity>
 
-
-                <TouchableOpacity //DRIBBLE
-                  style={{ marginHorizontal: 10, outlineWidth: 0 }}
+                <TouchableOpacity
+                  style={{ 
+                    marginHorizontal: isMobile ? 6 : isTablet ? 8 : 10, 
+                    outlineWidth: 0 
+                  }}
                   onPress={() => { handleLink(person.links.dribble) }}
                 >
                   <Image
                     source={require('../assets/about/dribble.svg')}
+                    style={{
+                      width: isMobile ? 20 : isTablet ? 22 : 24,
+                      height: isMobile ? 20 : isTablet ? 22 : 24,
+                    }}
                   />
                 </TouchableOpacity>
               </View>
-
             </View>
           ))}
         </View>
 
-        {/* FOOTING */}
-        <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 80 }}>
+        {/* FOOTING - Responsive */}
+        <View style={{ 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          marginTop: isMobile ? 40 : isTablet ? 60 : 80,
+          paddingHorizontal: isMobile ? 20 : 0,
+        }}>
           <Text style={{
             fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
-            fontSize: 34,
-            color: '#543236'
+            fontSize: isMobile ? 24 : isTablet ? 28 : 34,
+            color: '#543236',
+            textAlign: 'center',
           }}>We are hiring</Text>
           <Text style={{
             fontFamily: FONT_FAMILIES.FUTURA_BOOK,
             color: '#543236',
-            marginTop: 30,
-            fontSize: 19
+            marginTop: isMobile ? 15 : isTablet ? 20 : 30,
+            fontSize: isMobile ? 16 : isTablet ? 17 : 19,
+            textAlign: 'center',
           }}>Join our creative team and make an impact.</Text>
           <TouchableOpacity style={{
             outlineWidth: 0,
             borderColor: '#543236',
-            paddingVertical: 8,
+            paddingVertical: isMobile ? 10 : 8,
             borderWidth: 1,
             borderRadius: 14,
-            paddingHorizontal: 10,
-            marginTop: 30
+            paddingHorizontal: isMobile ? 15 : 10,
+            marginTop: isMobile ? 20 : isTablet ? 25 : 30
           }}>
             <Text style={{
-              fontFamily: FONT_FAMILIES.NUNITO_SANS
+              fontFamily: FONT_FAMILIES.NUNITO_SANS,
+              fontSize: isMobile ? 15 : 16,
             }}>Open Positions</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Custom Lines - Responsive */}
       <View style={{ alignItems: 'center' }}>
         <CustomLine
           length={width}
           color="#E85A4F"
-          thickness={4}
-          style={{ marginTop: isMobile ? 40 : 140, marginBottom: 9.5 }}
+          thickness={isMobile ? 3 : 4}
+          style={{ 
+            marginTop: isMobile ? 30 : isTablet ? 80 : 140, 
+            marginBottom: isMobile ? 7 : 9.5 
+          }}
         />
         <CustomLine
           length={width}
           color="#E85A4F"
-          thickness={4}
+          thickness={isMobile ? 3 : 4}
         />
       </View>
-      <ReviewsCarousel reviews={REVIEWS} />
+
+      {/* Reviews Carousel - Pass responsive props */}
+      <ReviewsCarousel 
+        reviews={REVIEWS} 
+        isMobile={isMobile} 
+        isTablet={isTablet}
+        width={width}
+      />
+
       <View style={{ alignItems: 'center' }}>
         <CustomLine
           length={width}
           color="#E85A4F"
-          thickness={4}
-          style={{ marginTop: isMobile ? 0 : 0, marginBottom: 9.5 }}
+          thickness={isMobile ? 3 : 4}
+          style={{ marginBottom: isMobile ? 7 : 9.5 }}
         />
         <CustomLine
           length={width}
           color="#E85A4F"
-          thickness={4}
+          thickness={isMobile ? 3 : 4}
         />
       </View>
 
-
-      {/* DICOVER */}
+      {/* DISCOVER SECTION - Fully Responsive */}
       <View
         style={[
           styles.discover,
           {
             flexDirection: isMobile ? 'column' : 'row',
-            marginTop: isMobile ? 45 : 90,
-            paddingHorizontal: isMobile ? 20 : 0,
+            marginTop: isMobile ? 35 : isTablet ? 60 : 90,
+            paddingHorizontal: isMobile ? 20 : isTablet ? 40 : 80,
+            paddingBottom: isMobile ? 40 : isTablet ? 60 : 0,
           },
         ]}
       >
-        <View style={{ justifyContent: 'center', alignItems: isMobile ? 'center' : 'flex-start' }}>
+        <View style={{ 
+          justifyContent: 'center', 
+          alignItems: isMobile ? 'center' : 'flex-start',
+          width: isMobile ? '100%' : isTablet ? '55%' : '50%',
+          marginBottom: isMobile ? 30 : 0,
+        }}>
           <Text
             style={{
-              fontSize: isMobile ? 28 : 64,
+              fontSize: isMobile ? 24 : isTablet ? 42 : 64,
               flexWrap: 'wrap',
-              width: isMobile ? width - 40 : 620,
+              width: isMobile ? '100%' : isTablet ? '100%' : 620,
               textAlign: isMobile ? 'center' : 'left',
               fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
               color: '#43282b',
+              lineHeight: isMobile ? 30 : isTablet ? 48 : 70,
+              marginBottom: isMobile ? 15 : isTablet ? 20 : 0,
             }}
           >
-            Discover Our Unique Colletion
+            Discover Our Unique Collection
           </Text>
           <Text
             style={{
-              fontSize: isMobile ? 16 : 23,
+              fontSize: isMobile ? 15 : isTablet ? 18 : 23,
               flexWrap: 'wrap',
-              width: isMobile ? width - 40 : 800,
-              marginTop: 25,
+              width: isMobile ? '100%' : isTablet ? '100%' : 800,
+              marginTop: isMobile ? 15 : isTablet ? 20 : 25,
               textAlign: isMobile ? 'center' : 'left',
               color: '#43282b',
+              lineHeight: isMobile ? 22 : isTablet ? 25 : 28,
+              fontFamily: FONT_FAMILIES.FUTURA_BOOK,
             }}
           >
             Explore our handcrafted designs that blend tradition with modernity for the GenZ fashionista.
           </Text>
           <View
             style={{
-              marginTop: 30,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
+              marginTop: isMobile ? 25 : 30,
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: isMobile ? 'center' : 'flex-start',
             }}
           >
             <TouchableOpacity
               style={{
                 borderRadius: 12,
-                paddingHorizontal: 15,
-                paddingVertical: 9,
-                borderWidth:1,
+                paddingHorizontal: isMobile ? 20 : 15,
+                paddingVertical: isMobile ? 12 : 9,
+                borderWidth: 1,
                 borderColor: '#412023',
-                margin: 5,
-                alignItems:'center',
-                justifyContent:'center'
-
+                marginBottom: isMobile ? 15 : 0,
+                marginRight: isMobile ? 0 : 14,
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: isMobile ? 120 : 'auto',
               }}
             >
-              <Text style={{ color: '#0C0B04', fontSize: 16 }}>Shop</Text>
+              <Text style={{ 
+                color: '#0C0B04', 
+                fontSize: isMobile ? 15 : 16,
+                fontFamily: FONT_FAMILIES.NUNITO_SANS,
+              }}>Shop</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
                 borderRadius: 12,
-                paddingHorizontal: 15,
-                paddingVertical: 9,
+                paddingHorizontal: isMobile ? 20 : 15,
+                paddingVertical: isMobile ? 12 : 9,
                 borderWidth: 0.4,
-                borderColor: 'rgba(12,11,4,0.15)',//15
-                margin: 5,
-                alignItems:'center',
-                justifyContent:'center',
-                marginHorizontal:14
+                borderColor: 'rgba(12,11,4,0.15)',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: isMobile ? 120 : 'auto',
               }}
             >
-              <Text style={{ color: '#0C0B04', fontSize: 16 }}>Contact</Text>
+              <Text style={{ 
+                color: '#0C0B04', 
+                fontSize: isMobile ? 15 : 16,
+                fontFamily: FONT_FAMILIES.NUNITO_SANS,
+              }}>Contact</Text>
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{ justifyContent: 'center', marginTop: isMobile ? 30 : 0 }}>
+        <View style={{ 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          width: isMobile ? '100%' : isTablet ? '45%' : '50%',
+        }}>
           <Image
             source={require('../assets/home/CTA/Placeholder Image.png')}
             style={{
-              height: isMobile ? 300 : 550,
+              height: isMobile ? 250 : isTablet ? 400 : 550,
+              width: isMobile ? Math.min(width - 40, 300) : 'auto',
               resizeMode: 'contain',
             }}
           />
         </View>
       </View>
 
-      {/* FOOTER */}
-      <Footer/>
+      {/* FOOTER - Responsive */}
+      {/* @ts-ignore */}
+      <Footer />
     </Animated.ScrollView>
   </View>
   );
@@ -784,14 +889,11 @@ export default function About() {
 
 const styles = StyleSheet.create({
   teamView: {
-    paddingTop: 90,
     backgroundColor: '#FCF4E3',
     alignItems: 'center',
-    paddingBottom: 120
   },
   heritageView: {
     backgroundColor: '#FCF4E3',
-    // Responsive styles handled inline
   },
   heritageLabel: {
     fontFamily: FONT_FAMILIES.FUTURA_BOOK,
@@ -807,9 +909,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     color: '#412023'
   },
-  heritageFeatures: {
-    // Responsive styles handled inline
-  },
+  heritageFeatures: {},
   featureItem: {
     justifyContent: 'flex-start'
   },
@@ -819,11 +919,10 @@ const styles = StyleSheet.create({
   },
   featureDescription: {
     flexWrap: 'wrap',
-    color: '#412023'
+    color: '#412023',
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
   },
-  heritageButtons: {
-    // Responsive styles handled inline
-  },
+  heritageButtons: {},
   shopButton: {
     borderWidth: 1,
     borderColor: '#43282B',
@@ -853,8 +952,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   discover: {
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#FCF4E3',
   },
   mainBody: {
     flex: 1,
@@ -863,7 +963,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#2C3540',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 70,
     ...Platform.select({
       web: {
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
@@ -896,23 +995,18 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  logo: {
-    marginHorizontal: 30,
-  },
+  logo: {},
   seachView: {
     flexDirection: 'row',
     alignItems: 'center',
-    left: 35,
   },
   searchTextInput: {
     paddingHorizontal: 7,
-    fontSize: 18,
     color: 'white',
     outlineWidth: 0,
   },
   navbarRightButtonsView: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
   },
   navbarRightButton: {
     paddingHorizontal: 15,
@@ -920,7 +1014,7 @@ const styles = StyleSheet.create({
   nrbText: {
     color: 'white',
     paddingHorizontal: 10,
-    fontSize: 19,
+    fontFamily: FONT_FAMILIES.NUNITO_SANS,
   },
   account: {
     flexDirection: 'row',
@@ -929,7 +1023,7 @@ const styles = StyleSheet.create({
   accountButtonsText: {
     color: 'white',
     paddingHorizontal: 15,
-    fontSize: 19,
+    fontFamily: FONT_FAMILIES.NUNITO_SANS,
   },
   bannerContainer: {
     position: 'relative',
@@ -960,12 +1054,10 @@ const styles = StyleSheet.create({
   thumbImage: {
     position: 'absolute',
     top: 72,
-    width: 150,
-    height: 100,
     resizeMode: 'contain',
     alignSelf: 'center',
     left: '50%',
-    transform: [{ translateX: -75 }], // Half of the width to center it
+    transform: [{ translateX: -75 }],
   },
   heroTextContainer: {
     position: 'absolute',
@@ -982,10 +1074,25 @@ const styles = StyleSheet.create({
   },
   subHeroText: {
     color: 'white',
-    fontSize: 24,
     textAlign: 'left',
-    fontFamily: FONT_FAMILIES.THESEASONS_LIGHT, // You can change this to a different font if needed
-    lineHeight: 31,
-    marginTop: 25
+    fontFamily: FONT_FAMILIES.THESEASONS_LIGHT,
+  },
+  bannerButton: {
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  bannerButtonPrimary: {
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  bannerButtonSecondary: {
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
+  },
+  bannerButtonText: {
+    color: 'white',
+    fontWeight: '400',
+    fontFamily: FONT_FAMILIES.NUNITO_SANS
   },
 });
