@@ -115,7 +115,7 @@ const REVIEWS = [
     author: "Artorias",
     autherPfp: "https://www.creativeuncut.com/gallery-18/art/ds-key-visual.jpg",
     authorRole: "The Abysswalker",
-    reviewText: "Whatever thou art, stay away! Soon... I will be consumed... by them, by the Dark.    Thou art strong human, surely thine kind are more than pure Dark.     I beg of thee, the spread of the Abyss... must be stopped.    Ah, Sif! There you are! All of you... forgive me... for I have availed you nothing."
+    reviewText: "Whatever thou art, stay away Soon... I will be consumed... by them, by the Dark."
   },
 ]
 
@@ -884,7 +884,8 @@ export default function About() {
             source={require('../assets/home/CTA/Placeholder Image.png')}
             style={{
               resizeMode: 'contain',
-              width: isMobile ? 365 : isTablet ? 450 : 600
+              width: isMobile ? 365 : isTablet ? 450 : 600,
+              marginBottom:isMobile?0:120
               // height: isMobile ? 250 : isTablet ? 400 : 550,
             }}
           />

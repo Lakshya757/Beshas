@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -8,45 +8,86 @@ import {
   useWindowDimensions,
   TextInput,
   Platform,
-  ScrollView
+  ScrollView,
+  Animated
 } from "react-native";
 
-import { useNavigation } from "@react-navigation/native";
-
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 import { useFonts, FONT_FAMILIES } from "../components/Fonts";
 import CustomLine from "../components/CustomLine";
 import { Ionicons } from "@expo/vector-icons";
+import { useScrollNavbar } from "../components/ScrollNavbar";
 
+// Import all images statically
+const images = {
+  order: require('../assets/support/order.svg'),
+  exchange: require('../assets/support/exchange.svg'),
+  doubt: require('../assets/support/doubt.svg'),
+};
 
-export default function Support(){
+const INFO = [
+  {
+    icon: 'order', // Use key instead of path
+    title: 'Track Your Order with Ease',
+    note: 'Stay updated on your order status anytime.'
+  },
+  {
+    icon: 'exchange',
+    title: 'Hassle Free Returns and Exchanges',
+    note: 'Our simple process ensures your satisfaction.'
+  },
+  {
+    icon: 'doubt',
+    title: 'Contact Us for Any Assistance',
+    note: 'Reach out to our support team anytime.'
+  },
+];
 
-
-const navigation: any = useNavigation();
+export default function Support() {
+  const navigation: any = useNavigation();
   const { fontsLoaded } = useFonts();
   const { width } = useWindowDimensions();
+
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  
 
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1024;
   const isDesktop = width >= 1024;
+  const navbarHeight = isDesktop ? 80 : 60;
+  const { handleScroll, navbarTranslateY, isNavbarVisible } = useScrollNavbar(navbarHeight);
+
+  const scrollViewRef = useRef(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (scrollViewRef.current) {
+        //@ts-ignore
+        // scrollViewRef.current.scrollTo({ y: 0, animated: false });
+      }
+    }, [])
+  );
 
   if (!fontsLoaded) return null;
 
-
-  return(
-     <View style={styles.container}>
-      <ScrollView
-        style={styles.mainBody}
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
+  return (
+    <View style={styles.container}>
+      {/* NAVBAR */}
+      <Animated.View
+        style={[
+          styles.navbarContainer,
+          {
+            transform: [{ translateY: navbarTranslateY }],
+            height: navbarHeight,
+          }
+        ]}
       >
-        {/* NAVBAR */}
         <View
           style={[
             styles.navbar,
             {
-              height: isDesktop ? 80 : 60,
+              height: navbarHeight,
               paddingHorizontal: isMobile ? 15 : 70,
               flexDirection: isMobile ? 'column' : 'row',
               paddingVertical: isMobile ? 10 : 0,
@@ -74,7 +115,7 @@ const navigation: any = useNavigation();
               resizeMode="contain"
             />
             {isMobile && (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.openDrawer()}>
                 <Ionicons name="menu" size={28} color="white" />
               </TouchableOpacity>
             )}
@@ -100,7 +141,7 @@ const navigation: any = useNavigation();
             >
               <TouchableOpacity
                 style={styles.navbarRightButton}
-                onPress={() => { navigation.navigate('Home') }}
+                onPress={() => navigation.navigate('Home')}
               >
                 <Text style={[
                   styles.nrbText,
@@ -108,9 +149,9 @@ const navigation: any = useNavigation();
                 ]}>Home</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => { navigation.navigate('About') }}
-
-                style={styles.navbarRightButton}>
+                onPress={() => navigation.navigate('About')}
+                style={styles.navbarRightButton}
+              >
                 <Text style={[
                   styles.nrbText,
                   { fontSize: isTablet ? 16 : 19 },
@@ -122,16 +163,15 @@ const navigation: any = useNavigation();
                   { fontSize: isTablet ? 16 : 19 },
                 ]}>Collections</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.navbarRightButton}>
+              <TouchableOpacity
+                style={styles.navbarRightButton}
+                onPress={() => navigation.navigate('Support')}
+              >
                 <Text style={[
                   styles.nrbText,
                   { fontSize: isTablet ? 16 : 19 },
                 ]}>Support</Text>
               </TouchableOpacity>
-
-
-
-
 
               <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text
@@ -168,18 +208,227 @@ const navigation: any = useNavigation();
               </View>
             </View>
           )}
-        </View>{/* NAVBAR */}
-
-        </ScrollView>
         </View>
+      </Animated.View>
+      {/* NAVBAR */}
+
+      <Animated.ScrollView
+        ref={scrollViewRef}
+        style={[styles.mainBody, { paddingTop: navbarHeight }]}
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
+        {/* HEADER */}
+        <View style={{ marginLeft: 100, paddingTop: 80, paddingBottom: 20, marginTop: 40 }}>
+          <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 15 : isTablet ? 16 : 17, }}>Welcome</Text>
+          <Text style={{ marginTop: 28, fontSize: 85, fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM, color: '#412023' }}>Support Made Simple</Text>
+          <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 17 : isTablet ? 18 : 20, marginTop: 28 }}>Explore our support options for tracking orders, returns, exchanges, and more to assist you.</Text>
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            thickness={isMobile ? 3 : 4}
+            style={{
+              marginTop: isMobile ? 30 : isTablet ? 80 : 140,
+              marginBottom: isMobile ? 7 : 9.5
+            }}
+          />
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            thickness={isMobile ? 3 : 4}
+          />
+        </View>
+        {/* HEADER */}
+
+        {/* ASSIST */}
+        <View style={{ marginLeft: 100, paddingTop: 80, paddingBottom: 50 }}>
+          <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 17 : isTablet ? 18 : 20, flexWrap: 'wrap', width: 800 }}>We are here to assist you with all your needs. Explore our key support features designed to enhance your experience.</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            {INFO.map((item, i) => (
+              <View key={i} style={styles.infoItem}>
+                <Image
+                  source={images[item.icon as keyof typeof images]}
+                  style={styles.infoIcon}
+                  resizeMode="contain"
+                />
+                <Text style={styles.infoTitle}>{item.title}</Text>
+                <Text style={styles.infoNote}>{item.note}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+        {/* ASSIST */}
+
+
+        <View style={{ alignItems: 'center' }}>
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            thickness={isMobile ? 3 : 4}
+            style={{
+              marginTop: isMobile ? 30 : isTablet ? 80 : 140,
+              marginBottom: isMobile ? 7 : 9.5
+            }}
+          />
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            thickness={isMobile ? 3 : 4}
+          />
+        </View>
+
+        {/* TRACK ORDER HEADING */}
+        <View style={styles.trackOrderView}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM, fontSize: 60, color: '#412023' }}>Track Your Order</Text>
+            <Text style={{
+              fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+              fontSize: 20,
+              flexWrap: 'wrap',
+              right: (width * 0.5) - 80,
+              width: 600,
+              transform: [{ translateX: 600 }],
+              marginLeft: 50
+            }}>Easily monitor the status of your order in real-time.{"\n"}
+              Stay informed and never miss a delivery!</Text>
+          </View>
+          {/* TRACK ORDER HEADING */}
+
+
+          {/* MAIN TRACKING */}
+          <View style={{ flexDirection: 'row', marginTop: 90, paddingBottom: 100 }}>
+            <View style={{ alignItems: 'flex-start' }}>{/* GET IN TOUCH AND FORM */}
+              <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 15 : isTablet ? 16 : 17, }}>Track</Text>
+              <Text style={{
+                fontSize: isMobile ? 32 : 50,
+                fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+                textAlign: 'center',
+                color: '#412023',
+                marginTop: 30
+              }}>Get In Touch</Text>
+              <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 15 : isTablet ? 16 : 17, marginTop: 15 }}>We're here to assist you with your inquiries.</Text>
+
+
+
+              <Text style={{ marginTop: 60, fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 12 : isTablet ? 13 : 16, }}>Name</Text>
+              <TextInput
+                style={{
+                  borderBottomWidth: 1,
+                  width: (width * 0.5) - 400,
+                  color: '#43282B',
+                  borderBottomColor: '#412023',
+                  height: 50,
+                  ...(Platform.OS === 'web' && { outline: 'none' }),
+                }}
+              />
+              <Text style={{ marginTop: 60, fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 12 : isTablet ? 13 : 16, }}>Email</Text>
+              <TextInput
+                style={{
+                  borderBottomWidth: 1,
+                  width: (width * 0.5) - 400,
+                  color: '#43282B',
+                  borderBottomColor: '#412023',
+                  height: 50,
+                  ...(Platform.OS === 'web' && { outline: 'none' }),
+                }}
+              />
+              <Text style={{ marginTop: 60, fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 12 : isTablet ? 13 : 16, }}>Message</Text>
+              <TextInput
+                style={{
+                  borderBottomWidth: 1,
+                  width: (width * 0.5) - 400,
+                  color: '#43282B',
+                  borderBottomColor: '#412023',
+                  height: 120,
+                  textAlignVertical: 'top', // For Android
+                  paddingTop: 10, // Add some top padding for better appearance
+                  ...(Platform.OS === 'web' && { outline: 'none' }),
+                  marginTop: 15
+                }}
+                placeholder="Type your message"
+                placeholderTextColor={'rgba(65, 32, 35,0.7)'}
+                multiline={true} // Enable multiline for better text area behavior
+              />
+
+              <TouchableOpacity
+                style={styles.checkboxContainer}
+                onPress={() => setAcceptedTerms(!acceptedTerms)}
+                activeOpacity={0.7}
+              >
+                <View style={[
+                  styles.checkbox,
+                  acceptedTerms && styles.checkboxChecked
+                ]}>
+                  {acceptedTerms && (
+                    <Ionicons
+                      name="checkmark"
+                      size={16}
+                      color="#FCF4E3"
+                    />
+                  )}
+                </View>
+                <Text style={styles.checkboxText}>
+                  I accept the Terms
+                </Text>
+              </TouchableOpacity>
+
+
+
+
+
+            </View>
+
+
+            <View>{/* TRACKING MAP */}
+
+            </View>
+
+
+          </View>
+          {/* MAIN TRACKING */}
+        </View>
+      </Animated.ScrollView>
+    </View>
   )
 }
 
-
 const styles = StyleSheet.create({
+    checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: '#412023',
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  checkboxChecked: {
+    backgroundColor: '#412023',
+  },
+  checkboxText: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    color: '#412023',
+    fontSize: 14,
+  },
+  trackOrderView: {
+    paddingTop: 100,
+    marginLeft: 100,
+  },
   container: {
-    backgroundColor: '#FCF4E3',
     flex: 1,
+    backgroundColor: '#FCF4E3',
   },
   responsiveImage: {
     aspectRatio: 1312 / 632,
@@ -234,10 +483,54 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  navbarContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      },
+      default: {
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+    }),
+  },
   logo: {
     marginHorizontal: 30,
   },
   mainBody: {
     flex: 1,
+  },
+  infoItem: {
+    alignItems: 'flex-start',
+    // flex: 1,
+    paddingHorizontal: 10,
+    marginTop: 80,
+  },
+  infoIcon: {
+    width: 48,
+    height: 48,
+    marginBottom: 15,
+  },
+  infoTitle: {
+    fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+    fontSize: 30,
+    color: '#412023',
+    marginBottom: 10,
+    flexWrap: 'wrap',
+    width: 350
+  },
+  infoNote: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    fontSize: 16,
+    color: '#412023',
+    textAlign: 'center',
   },
 });
