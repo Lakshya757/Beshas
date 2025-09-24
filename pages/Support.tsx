@@ -28,7 +28,7 @@ const images = {
 
 const INFO = [
   {
-    icon: 'order', // Use key instead of path
+    icon: 'order',
     title: 'Track Your Order with Ease',
     note: 'Stay updated on your order status anytime.'
   },
@@ -44,13 +44,159 @@ const INFO = [
   },
 ];
 
+// Order tracking data
+const ORDER_STAGES = [
+  {
+    id: 1,
+    title: 'Order Placed',
+    icon: 'bag-outline',
+    completed: true,
+    location: { lat: 28.6139, lng: 77.2090, name: 'New Delhi' }
+  },
+  {
+    id: 2,
+    title: 'Dispatched',
+    icon: 'cube-outline',
+    completed: true,
+    location: { lat: 28.7041, lng: 77.1025, name: 'Warehouse, Delhi' }
+  },
+  {
+    id: 3,
+    title: 'In Transit',
+    icon: 'car-outline',
+    completed: false,
+    current: true,
+    location: { lat: 26.9124, lng: 80.9420, name: 'Lucknow Hub' }
+  },
+  {
+    id: 4,
+    title: 'Delivered',
+    icon: 'home-outline',
+    completed: false,
+    location: { lat: 26.8467, lng: 80.9462, name: 'Your Location, Lucknow' }
+  },
+];
+
+// Order Tracking Progress Component
+const OrderTrackingProgress = () => {
+  return (
+    <View style={styles.trackingContainer}>
+      {ORDER_STAGES.map((stage, index) => (
+        //@ts-ignore
+        <View key={stage.id} style={styles.stageContainer}>
+          <View style={styles.stageIconContainer}>
+            <View style={[
+              styles.stageIcon,
+              stage.completed && styles.stageIconCompleted,
+              stage.current && styles.stageIconCurrent
+            ]}>
+              <Ionicons
+                // @ts-ignore
+                name={stage.icon}
+                size={20}
+                color={stage.completed || stage.current ? '#FCF4E3' : '#412023'}
+              />
+            </View>
+            {index < ORDER_STAGES.length - 1 && (
+              <View style={[
+                styles.connectorLine,
+                stage.completed && styles.connectorLineCompleted
+              ]} />
+            )}
+          </View>
+          <View style={styles.stageContent}>
+            <Text style={[
+              styles.stageTitle,
+              (stage.completed || stage.current) && styles.stageTitleActive
+            ]}>
+              {stage.title}
+            </Text>
+            <Text style={styles.stageLocation}>{stage.location.name}</Text>
+          </View>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+// Simple Map Visualization Component
+const TrackingMap = () => {
+  const { width } = useWindowDimensions();
+  const mapWidth = Math.min(400, width * 0.35);
+
+  return (
+    <View style={[styles.mapContainer, { width: mapWidth, height: mapWidth * 0.75 }]}>
+      {/* Map Background */}
+      <View style={styles.mapBackground}>
+        {/* Route Path */}
+        <View style={styles.routePath} />
+
+        {/* Location Markers */}
+        {ORDER_STAGES.map((stage, index) => {
+          // Simple positioning calculation for demo purposes
+          const topPosition = 20 + (index * 30);
+          const leftPosition = 50 + (index % 2 === 0 ? 0 : 100);
+
+          return (
+            <View
+              // @ts-ignore
+              key={stage.id}
+              style={[
+                styles.mapMarker,
+                {
+                  top: `${topPosition}%`,
+                  left: `${leftPosition}%`,
+                },
+                stage.completed && styles.mapMarkerCompleted,
+                stage.current && styles.mapMarkerCurrent
+              ]}
+            >
+              <Ionicons
+                name={stage.current ? 'location' : 'location-outline'}
+                size={stage.current ? 24 : 16}
+                color={stage.current ? '#E85A4F' : stage.completed ? '#4CAF50' : '#999'}
+              />
+              <Text style={[
+                styles.markerLabel,
+                stage.current && styles.markerLabelCurrent
+              ]}>
+                {stage.location.name.split(',')[0]}
+              </Text>
+            </View>
+          );
+        })}
+
+        {/* Current Location Pulse */}
+        <View style={styles.currentLocationPulse}>
+          <Animated.View style={styles.pulseRing} />
+        </View>
+      </View>
+
+      {/* Map Legend */}
+      <View style={styles.mapLegend}>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendDot, { backgroundColor: '#4CAF50' }]} />
+          <Text style={styles.legendText}>Completed</Text>
+        </View>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendDot, { backgroundColor: '#E85A4F' }]} />
+          <Text style={styles.legendText}>Current</Text>
+        </View>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendDot, { backgroundColor: '#999' }]} />
+          <Text style={styles.legendText}>Pending</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
 export default function Support() {
   const navigation: any = useNavigation();
   const { fontsLoaded } = useFonts();
   const { width } = useWindowDimensions();
 
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  
 
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1024;
@@ -250,6 +396,7 @@ export default function Support() {
           <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 17 : isTablet ? 18 : 20, flexWrap: 'wrap', width: 800 }}>We are here to assist you with all your needs. Explore our key support features designed to enhance your experience.</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             {INFO.map((item, i) => (
+              // @ts-ignore
               <View key={i} style={styles.infoItem}>
                 <Image
                   source={images[item.icon as keyof typeof images]}
@@ -263,7 +410,6 @@ export default function Support() {
           </View>
         </View>
         {/* ASSIST */}
-
 
         <View style={{ alignItems: 'center' }}>
           <CustomLine
@@ -293,16 +439,16 @@ export default function Support() {
               right: (width * 0.5) - 80,
               width: 600,
               transform: [{ translateX: 600 }],
-              marginLeft: 50
+              marginLeft: 50,
+              color: '#412023'
             }}>Easily monitor the status of your order in real-time.{"\n"}
               Stay informed and never miss a delivery!</Text>
           </View>
           {/* TRACK ORDER HEADING */}
 
-
           {/* MAIN TRACKING */}
-          <View style={{ flexDirection: 'row', marginTop: 90, paddingBottom: 100 }}>
-            <View style={{ alignItems: 'flex-start' }}>{/* GET IN TOUCH AND FORM */}
+          <View style={{ flexDirection: isMobile ? 'column' : 'row', marginTop: 90, paddingBottom: 100 }}>
+            <View style={{ flex: isMobile ? 1 : 0.6, alignItems: 'flex-start' }}>{/* GET IN TOUCH AND FORM */}
               <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 15 : isTablet ? 16 : 17, }}>Track</Text>
               <Text style={{
                 fontSize: isMobile ? 32 : 50,
@@ -313,13 +459,11 @@ export default function Support() {
               }}>Get In Touch</Text>
               <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 15 : isTablet ? 16 : 17, marginTop: 15 }}>We're here to assist you with your inquiries.</Text>
 
-
-
               <Text style={{ marginTop: 60, fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 12 : isTablet ? 13 : 16, }}>Name</Text>
               <TextInput
                 style={{
                   borderBottomWidth: 1,
-                  width: (width * 0.5) - 400,
+                  width: isMobile ? width * 0.8 : (width * 0.35),
                   color: '#43282B',
                   borderBottomColor: '#412023',
                   height: 50,
@@ -330,7 +474,7 @@ export default function Support() {
               <TextInput
                 style={{
                   borderBottomWidth: 1,
-                  width: (width * 0.5) - 400,
+                  width: isMobile ? width * 0.8 : (width * 0.35),
                   color: '#43282B',
                   borderBottomColor: '#412023',
                   height: 50,
@@ -341,18 +485,18 @@ export default function Support() {
               <TextInput
                 style={{
                   borderBottomWidth: 1,
-                  width: (width * 0.5) - 400,
+                  width: isMobile ? width * 0.8 : (width * 0.35),
                   color: '#43282B',
                   borderBottomColor: '#412023',
                   height: 120,
-                  textAlignVertical: 'top', // For Android
-                  paddingTop: 10, // Add some top padding for better appearance
+                  textAlignVertical: 'top',
+                  paddingTop: 10,
                   ...(Platform.OS === 'web' && { outline: 'none' }),
                   marginTop: 15
                 }}
                 placeholder="Type your message"
                 placeholderTextColor={'rgba(65, 32, 35,0.7)'}
-                multiline={true} // Enable multiline for better text area behavior
+                multiline={true}
               />
 
               <TouchableOpacity
@@ -377,18 +521,25 @@ export default function Support() {
                 </Text>
               </TouchableOpacity>
 
-
-
-
-
+              <TouchableOpacity style={styles.submitButton}>
+                <Text style={styles.submitButtonText}>Submit</Text>
+              </TouchableOpacity>
             </View>
 
+            {/* TRACKING MAP AND PROGRESS */}
+            <View style={{ flex: isMobile ? 1 : 0.4, marginLeft: isMobile ? 0 : 50, marginTop: isMobile ? 50 : 0 }}>
+              {/* Order Progress */}
+              {/* <View style={styles.progressSection}>
+                <Text style={styles.progressTitle}>Order Status</Text>
+                <OrderTrackingProgress />
+              </View> */}
 
-            <View>{/* TRACKING MAP */}
-
+              {/* Tracking Map */}
+              <View style={styles.mapSection}>
+                <Text style={styles.mapTitle}>Live Tracking</Text>
+                <TrackingMap />
+              </View>
             </View>
-
-
           </View>
           {/* MAIN TRACKING */}
         </View>
@@ -398,11 +549,13 @@ export default function Support() {
 }
 
 const styles = StyleSheet.create({
-    checkboxContainer: {
+  // Original styles
+  checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 30,
     marginBottom: 30,
+    borderRadius: 10
   },
   checkbox: {
     width: 20,
@@ -413,6 +566,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
+    borderRadius: 5
   },
   checkboxChecked: {
     backgroundColor: '#412023',
@@ -421,6 +575,20 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILIES.FUTURA_BOOK,
     color: '#412023',
     fontSize: 14,
+  },
+  submitButton: {
+    backgroundColor: '#412023',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  submitButtonText: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    color: '#FCF4E3',
+    fontSize: 16,
+    fontWeight: '600',
   },
   trackOrderView: {
     paddingTop: 100,
@@ -510,7 +678,6 @@ const styles = StyleSheet.create({
   },
   infoItem: {
     alignItems: 'flex-start',
-    // flex: 1,
     paddingHorizontal: 10,
     marginTop: 80,
   },
@@ -533,4 +700,195 @@ const styles = StyleSheet.create({
     color: '#412023',
     textAlign: 'center',
   },
-});
+
+  // New styles for tracking components
+  progressSection: {
+    marginBottom: 40,
+  },
+  progressTitle: {
+    fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+    fontSize: 24,
+    color: '#412023',
+    marginBottom: 20,
+  },
+  trackingContainer: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 20,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+      },
+      default: {
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+    }),
+  },
+  stageContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 20,
+  },
+  stageIconContainer: {
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  stageIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+    borderWidth: 2,
+    borderColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  stageIconCompleted: {
+    backgroundColor: '#4CAF50',
+    borderColor: '#4CAF50',
+  },
+  stageIconCurrent: {
+    backgroundColor: '#E85A4F',
+    borderColor: '#E85A4F',
+  },
+  connectorLine: {
+    width: 2,
+    height: 30,
+    backgroundColor: '#ddd',
+    marginTop: 5,
+  },
+  connectorLineCompleted: {
+    backgroundColor: '#4CAF50',
+  },
+  stageContent: {
+    flex: 1,
+    paddingTop: 8,
+  },
+  stageTitle: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    fontSize: 16,
+    color: '#666',
+    fontWeight: '600',
+  },
+  stageTitleActive: {
+    color: '#412023',
+    fontWeight: 'bold',
+  },
+  stageLocation: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    fontSize: 12,
+    color: '#999',
+    marginTop: 2,
+  },
+
+  // Map styles
+  mapSection: {
+    marginTop: 20,
+  },
+  mapTitle: {
+    fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+    fontSize: 24,
+    color: '#412023',
+    marginBottom: 20,
+  },
+  mapContainer: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 15,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+      },
+      default: {
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+    }),
+  },
+  mapBackground: {
+    flex: 1,
+    backgroundColor: '#f8f8f8',
+    borderRadius: 8,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  routePath: {
+    position: 'absolute',
+    top: '25%',
+    left: '10%',
+    right: '10%',
+    height: 2,
+    backgroundColor: '#E85A4F',
+    opacity: 0.6,
+  },
+  mapMarker: {
+    position: 'absolute',
+    alignItems: 'center',
+    transform: [{ translateX: -12 }, { translateY: -12 }],
+  },
+  mapMarkerCompleted: {
+    // Additional styling for completed markers
+  },
+  mapMarkerCurrent: {
+    // Additional styling for current location marker
+  },
+  markerLabel: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    fontSize: 10,
+    color: '#666',
+    marginTop: 2,
+    textAlign: 'center',
+    backgroundColor: 'white',
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderRadius: 3,
+  },
+  markerLabelCurrent: {
+    color: '#E85A4F',
+    fontWeight: 'bold',
+  },
+  currentLocationPulse: {
+    position: 'absolute',
+    top: '50%',
+    left: '60%',
+    transform: [{ translateX: -15 }, { translateY: -15 }],
+  },
+  pulseRing: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'rgba(232, 90, 79, 0.3)',
+    borderWidth: 2,
+    borderColor: '#E85A4F',
+  },
+  mapLegend: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+    marginTop: 10,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  legendDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 4,
+  },
+  legendText: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    fontSize: 10,
+    color: '#666',
+  },
+})
