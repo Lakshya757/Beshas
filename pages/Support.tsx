@@ -18,6 +18,7 @@ import { useFonts, FONT_FAMILIES } from "../components/Fonts";
 import CustomLine from "../components/CustomLine";
 import { Ionicons } from "@expo/vector-icons";
 import { useScrollNavbar } from "../components/ScrollNavbar";
+import LeafletMaps from "../components/LeafletMaps";
 
 // Import all images statically
 const images = {
@@ -76,120 +77,6 @@ const ORDER_STAGES = [
     location: { lat: 26.8467, lng: 80.9462, name: 'Your Location, Lucknow' }
   },
 ];
-
-// Order Tracking Progress Component
-const OrderTrackingProgress = () => {
-  return (
-    <View style={styles.trackingContainer}>
-      {ORDER_STAGES.map((stage, index) => (
-        //@ts-ignore
-        <View key={stage.id} style={styles.stageContainer}>
-          <View style={styles.stageIconContainer}>
-            <View style={[
-              styles.stageIcon,
-              stage.completed && styles.stageIconCompleted,
-              stage.current && styles.stageIconCurrent
-            ]}>
-              <Ionicons
-                // @ts-ignore
-                name={stage.icon}
-                size={20}
-                color={stage.completed || stage.current ? '#FCF4E3' : '#412023'}
-              />
-            </View>
-            {index < ORDER_STAGES.length - 1 && (
-              <View style={[
-                styles.connectorLine,
-                stage.completed && styles.connectorLineCompleted
-              ]} />
-            )}
-          </View>
-          <View style={styles.stageContent}>
-            <Text style={[
-              styles.stageTitle,
-              (stage.completed || stage.current) && styles.stageTitleActive
-            ]}>
-              {stage.title}
-            </Text>
-            <Text style={styles.stageLocation}>{stage.location.name}</Text>
-          </View>
-        </View>
-      ))}
-    </View>
-  );
-};
-
-// Simple Map Visualization Component
-const TrackingMap = () => {
-  const { width } = useWindowDimensions();
-  const mapWidth = Math.min(400, width * 0.35);
-
-  return (
-    <View style={[styles.mapContainer, { width: mapWidth, height: mapWidth * 0.75 }]}>
-      {/* Map Background */}
-      <View style={styles.mapBackground}>
-        {/* Route Path */}
-        <View style={styles.routePath} />
-
-        {/* Location Markers */}
-        {ORDER_STAGES.map((stage, index) => {
-          // Simple positioning calculation for demo purposes
-          const topPosition = 20 + (index * 30);
-          const leftPosition = 50 + (index % 2 === 0 ? 0 : 100);
-
-          return (
-            <View
-              // @ts-ignore
-              key={stage.id}
-              style={[
-                styles.mapMarker,
-                {
-                  top: `${topPosition}%`,
-                  left: `${leftPosition}%`,
-                },
-                stage.completed && styles.mapMarkerCompleted,
-                stage.current && styles.mapMarkerCurrent
-              ]}
-            >
-              <Ionicons
-                name={stage.current ? 'location' : 'location-outline'}
-                size={stage.current ? 24 : 16}
-                color={stage.current ? '#E85A4F' : stage.completed ? '#4CAF50' : '#999'}
-              />
-              <Text style={[
-                styles.markerLabel,
-                stage.current && styles.markerLabelCurrent
-              ]}>
-                {stage.location.name.split(',')[0]}
-              </Text>
-            </View>
-          );
-        })}
-
-        {/* Current Location Pulse */}
-        <View style={styles.currentLocationPulse}>
-          <Animated.View style={styles.pulseRing} />
-        </View>
-      </View>
-
-      {/* Map Legend */}
-      <View style={styles.mapLegend}>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: '#4CAF50' }]} />
-          <Text style={styles.legendText}>Completed</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: '#E85A4F' }]} />
-          <Text style={styles.legendText}>Current</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: '#999' }]} />
-          <Text style={styles.legendText}>Pending</Text>
-        </View>
-      </View>
-    </View>
-  );
-};
 
 export default function Support() {
   const navigation: any = useNavigation();
@@ -536,8 +423,7 @@ export default function Support() {
 
               {/* Tracking Map */}
               <View style={styles.mapSection}>
-                <Text style={styles.mapTitle}>Live Tracking</Text>
-                <TrackingMap />
+                <LeafletMaps/>
               </View>
             </View>
           </View>
