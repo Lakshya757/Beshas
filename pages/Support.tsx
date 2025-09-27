@@ -182,17 +182,20 @@ export default function Support() {
               width: isMobile ? '100%' : 'auto',
             }}
           >
-            <Image
-              source={require('../assets/home/Navbar/navbar-logo.png')}
-              style={[
-                styles.logo,
-                {
-                  height: isDesktop ? 100 : isMobile ? 25 : 40,
-                  marginHorizontal: isMobile ? 0 : 30,
-                },
-              ]}
-              resizeMode="contain"
-            />
+            <TouchableOpacity onPress={() => { navigation.navigate('Home') }}>
+
+              <Image
+                source={require('../assets/home/Navbar/navbar-logo.png')}
+                style={[
+                  styles.logo,
+                  {
+                    height: isDesktop ? 100 : isMobile ? 25 : 40,
+                    marginHorizontal: isMobile ? 0 : 30,
+                  },
+                ]}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
             {isMobile && (
               <TouchableOpacity onPress={() => navigation.openDrawer()}>
                 <Image
@@ -212,7 +215,6 @@ export default function Support() {
                   source={require('../assets/icons/search.svg')}
                   style={{
                     height: 20,
-                    width: 20
                   }}
                   resizeMode='contain'
                 />
@@ -540,12 +542,58 @@ export default function Support() {
         </View>
 
         {/* RETURNS */}
-        <View>
-          {/* LEFT SIDE */}
-          {/* <View>
-            <Text>Returns</Text>
+        <View style={styles.returnView}>
+          <View>{/* LEFT SIDE */}
+            <Text style={{ fontFamily: FONT_FAMILIES.FUTURA_BOOK, color: '#412023', fontSize: isMobile ? 15 : isTablet ? 16 : 17, height: 20 }}>Return</Text>
+            <Text style={{ fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM, fontSize: 60, color: '#412023', justifyContent: 'flex-start', marginTop: 30 }}>Easy Return and {"\n"}Exchanges</Text>
+            <Image
+              source={require('../assets/icons/procedure.svg')}
+              style={{
+                tintColor: '#43282B',
+                marginTop: 130
+              }}
+            />
+            <Text style={{ fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM, fontSize: 48, color: '#412023', justifyContent: 'flex-start', marginTop: 50 }}>How to Easily Process{"\n"}Your Return</Text>
+            <Text style={[styles.helpDescription, {fontSize:16, width: 550,}]}>
+              Returning an item is simple! Just follow these steps and ensure you have the necessary documentation ready.
+            </Text>
 
-          </View> */}
+            <View style={{flexDirection:'row', marginTop:45}}>
+              <View>
+                <Image 
+                  source={require('../assets/icons/how-to.svg')}
+                  style={{
+                    tintColor:'#412023'
+                  }}
+                />
+              </View>
+
+
+              <View>
+                <Image
+                  source={require('../assets/icons/access.svg')}
+                  style={{
+                    tintColor:'#412023'
+                  }}
+                />
+              </View>
+
+            </View>
+          </View>
+
+
+          <View style={{ paddingTop: 60 }}>{/* RIGHT SIDE */}
+            <Text style={[styles.helpDescription, {}]}>
+              We understand that sometimes things don't work out. Our hassle-free returns and exchanges process ensures you can shop with confidence.
+            </Text>
+
+
+
+          </View>
+
+
+
+
 
         </View>
 
@@ -555,7 +603,7 @@ export default function Support() {
             color="#E85A4F"
             thickness={isMobile ? 3 : 4}
             style={{
-              marginTop: isMobile ? 30 : isTablet ? 50 : 80,
+              // marginTop: isMobile ? 30 : isTablet ? 50 : 80,
               marginBottom: isMobile ? 7 : 9.5
             }}
           />
@@ -751,6 +799,72 @@ export default function Support() {
 }
 
 const styles = StyleSheet.create({
+  returnView: {
+    paddingTop: 100,
+    paddingHorizontal: 100,
+    paddingBottom: 100,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  navbarContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      },
+      default: {
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+    }),
+  },
+  navbar: {
+    backgroundColor: '#2C3540',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  logo: {
+    marginHorizontal: 30,
+  },
+  seachView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    left: 35,
+  },
+  searchTextInput: {
+    paddingHorizontal: 7,
+    fontSize: 22,
+    color: 'white',
+    outlineWidth: 0,
+  },
+  navbarRightButtonsView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  navbarRightButton: {
+    paddingHorizontal: 15,
+  },
+  nrbText: {
+    color: 'white',
+    paddingHorizontal: 10,
+    fontSize: 19,
+  },
+  account: {
+    flexDirection: 'row',
+    marginLeft: 18,
+  },
+  accountButtonsText: {
+    color: 'white',
+    paddingHorizontal: 15,
+    fontSize: 19,
+  },
   FAQView: {
     paddingTop: 100,
     paddingLeft: 100
@@ -805,78 +919,6 @@ const styles = StyleSheet.create({
   },
   responsiveImage: {
     aspectRatio: 1312 / 632,
-  },
-  seachView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    left: 35,
-  },
-  account: {
-    flexDirection: 'row',
-    marginLeft: 18,
-  },
-  navbarRightButton: {
-    paddingHorizontal: 15,
-  },
-  accountButtonsText: {
-    color: 'white',
-    paddingHorizontal: 15,
-    fontSize: 19,
-  },
-  nrbText: {
-    color: 'white',
-    paddingHorizontal: 10,
-    fontSize: 19,
-  },
-  navbarRightButtonsView: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  searchTextInput: {
-    paddingHorizontal: 7,
-    fontSize: 18,
-    color: 'white',
-    outlineWidth: 0,
-  },
-  navbar: {
-    backgroundColor: '#2C3540',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 70,
-    ...Platform.select({
-      web: {
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      },
-      default: {
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-    }),
-  },
-  navbarContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1000,
-    ...Platform.select({
-      web: {
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      },
-      default: {
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-    }),
-  },
-  logo: {
-    marginHorizontal: 30,
   },
   mainBody: {
     flex: 1,

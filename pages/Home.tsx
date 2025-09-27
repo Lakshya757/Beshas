@@ -93,25 +93,28 @@ export default function Home() {
               width: isMobile ? '100%' : 'auto',
             }}
           >
-            <Image
-              source={require('../assets/home/Navbar/navbar-logo.png')}
-              style={[
-                styles.logo,
-                {
-                  height: isDesktop ? 100 : isMobile ? 25 : 40,
-                  marginHorizontal: isMobile ? 0 : 30,
-                },
-              ]}
-              resizeMode="contain"
-            />
+            <TouchableOpacity onPress={()=>{navigation.navigate('Home')}}>
+
+              <Image
+                source={require('../assets/home/Navbar/navbar-logo.png')}
+                style={[
+                  styles.logo,
+                  {
+                    height: isDesktop ? 100 : isMobile ? 25 : 40,
+                    marginHorizontal: isMobile ? 0 : 30,
+                  },
+                ]}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
             {isMobile && (
               <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                <Image 
-                source={require('../assets/icons/menu.svg')}
+                <Image
+                  source={require('../assets/icons/menu.svg')}
                   style={{
-                    height:28,
-                    width:28,
-                    tintColor:'white'
+                    height: 28,
+                    width: 28,
+                    tintColor: 'white'
                   }}
                   resizeMode='contain'
                 />
@@ -673,7 +676,7 @@ export default function Home() {
         {/* SECOND DEMOS */}
 
         {!isMobile && (
-// ZOOM OUT
+          // ZOOM OUT
           <View style={styles.secondDemosView}>
             <View style={{ flexDirection: 'row' }}>
               <View style={{
@@ -735,7 +738,7 @@ export default function Home() {
                     source={require('../assets/icons/chevron-forward.svg')}
                     style={{
                       tintColor: '#412023',
-                      left: 8, 
+                      left: 8,
                       height: 18,
                       width: 18
                     }}
@@ -766,7 +769,7 @@ export default function Home() {
                     source={require('../assets/icons/chevron-back.svg')}
                     style={{
                       tintColor: '#412023',
-                      right: 8, 
+                      right: 8,
                       height: 18,
                       width: 18
                     }}
@@ -1506,7 +1509,7 @@ const styles = StyleSheet.create({
   heroNavLinksView: {
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginTop:30
+    marginTop: 30
   },
   responsiveImage: {
     aspectRatio: 1312 / 632,

@@ -178,7 +178,7 @@ export default function About() {
           styles.navbar,
           {
             height: navbarHeight,
-            paddingHorizontal: isMobile ? 15 : isTablet ? 50 : 70,
+            paddingHorizontal: isMobile ? 15 : 70,
             flexDirection: isMobile ? 'column' : 'row',
             paddingVertical: isMobile ? 10 : 0,
           },
@@ -193,17 +193,20 @@ export default function About() {
             width: isMobile ? '100%' : 'auto',
           }}
         >
-          <Image
-            source={require('../assets/home/Navbar/navbar-logo.png')}
-            style={[
-              styles.logo,
-              {
-                height: isDesktop ? 100 : isTablet ? 50 : 25,
-                marginHorizontal: isMobile ? 0 : isTablet ? 20 : 30,
-              },
-            ]}
-            resizeMode="contain"
-          />
+          <TouchableOpacity onPress={() => { navigation.navigate('Home') }}>
+
+            <Image
+              source={require('../assets/home/Navbar/navbar-logo.png')}
+              style={[
+                styles.logo,
+                {
+                  height: isDesktop ? 100 : isMobile ? 25 : 40,
+                  marginHorizontal: isMobile ? 0 : 30,
+                },
+              ]}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
           {isMobile && (
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <Image
@@ -218,7 +221,7 @@ export default function About() {
             </TouchableOpacity>
           )}
           {!isMobile && (
-            <View style={[styles.seachView, { left: isMobile ? 0 : isTablet ? 25 : 35 }]}>
+            <View style={[styles.seachView, { left: isMobile ? 0 : 35 }]}>
               <Image
                 source={require('../assets/icons/search.svg')}
                 style={{
@@ -227,7 +230,7 @@ export default function About() {
                 resizeMode='contain'
               />
               <TextInput
-                style={[styles.searchTextInput, { fontSize: isTablet ? 16 : 18 }]}
+                style={styles.searchTextInput}
                 placeholder="Search"
                 placeholderTextColor={'white'}
               />
@@ -247,36 +250,69 @@ export default function About() {
               style={styles.navbarRightButton}
               onPress={() => navigation.navigate('Home')}
             >
-              <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>Home</Text>
+              <Text style={[
+                styles.nrbText,
+                { fontSize: isTablet ? 16 : 19 },
+              ]}>Home</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => navigation.navigate('About')}
               style={styles.navbarRightButton}
             >
-              <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>About Us</Text>
+              <Text style={[
+                styles.nrbText,
+                { fontSize: isTablet ? 16 : 19 },
+              ]}>About Us</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.navbarRightButton}>
-              <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>Collections</Text>
+              <Text style={[
+                styles.nrbText,
+                { fontSize: isTablet ? 16 : 19 },
+              ]}>Collections</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.navbarRightButton}
               onPress={() => navigation.navigate('Support')}
             >
-              <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>Support</Text>
+              <Text style={[
+                styles.nrbText,
+                { fontSize: isTablet ? 16 : 19 },
+              ]}>Support</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>Shop Now</Text>
+              <Text
+                style={[
+                  styles.nrbText,
+                  { fontSize: isTablet ? 16 : 19 },
+                ]}
+              >
+                Shop Now
+              </Text>
               <Image
                 source={require('../assets/icons/chevron-down.svg')}
               />
             </TouchableOpacity>
             <View style={styles.account}>
               <TouchableOpacity>
-                <Text style={[styles.accountButtonsText, { fontSize: isTablet ? 16 : 19 }]}>Join</Text>
+                <Text
+                  style={[
+                    styles.accountButtonsText,
+                    { fontSize: isTablet ? 16 : 19 },
+                  ]}
+                >
+                  Join
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity>
-                <Text style={[styles.accountButtonsText, { fontSize: isTablet ? 16 : 19 }]}>Shop</Text>
+                <Text
+                  style={[
+                    styles.accountButtonsText,
+                    { fontSize: isTablet ? 16 : 19 },
+                  ]}
+                >
+                  Shop
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -923,6 +959,65 @@ export default function About() {
 }
 
 const styles = StyleSheet.create({
+  navbarContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      },
+      default: {
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+    }),
+  },
+  navbar: {
+    backgroundColor: '#2C3540',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  logo: {
+    marginHorizontal: 30,
+  },
+  seachView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    left: 35,
+  },
+  searchTextInput: {
+    paddingHorizontal: 7,
+    fontSize: 22,
+    color: 'white',
+    outlineWidth: 0,
+  },
+  navbarRightButtonsView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  navbarRightButton: {
+    paddingHorizontal: 15,
+  },
+  nrbText: {
+    color: 'white',
+    paddingHorizontal: 10,
+    fontSize: 19,
+  },
+  account: {
+    flexDirection: 'row',
+    marginLeft: 18,
+  },
+  accountButtonsText: {
+    color: 'white',
+    paddingHorizontal: 15,
+    fontSize: 19,
+  },
   teamView: {
     backgroundColor: '#FCF4E3',
     alignItems: 'center',
@@ -994,72 +1089,7 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
   },
-  navbar: {
-    backgroundColor: '#2C3540',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    ...Platform.select({
-      web: {
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      },
-      default: {
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-    }),
-  },
-  navbarContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1000,
-    ...Platform.select({
-      web: {
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      },
-      default: {
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-    }),
-  },
-  logo: {},
-  seachView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  searchTextInput: {
-    paddingHorizontal: 7,
-    color: 'white',
-    outlineWidth: 0,
-  },
-  navbarRightButtonsView: {
-    flexDirection: 'row',
-  },
-  navbarRightButton: {
-    paddingHorizontal: 15,
-  },
-  nrbText: {
-    color: 'white',
-    paddingHorizontal: 10,
-    fontFamily: FONT_FAMILIES.NUNITO_SANS,
-  },
-  account: {
-    flexDirection: 'row',
-    marginLeft: 18,
-  },
-  accountButtonsText: {
-    color: 'white',
-    paddingHorizontal: 15,
-    fontFamily: FONT_FAMILIES.NUNITO_SANS,
-  },
+
   bannerContainer: {
     position: 'relative',
     alignItems: 'center',
