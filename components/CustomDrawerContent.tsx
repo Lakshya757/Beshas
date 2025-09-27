@@ -12,34 +12,48 @@ import {
 import {
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
-import { Ionicons } from '@expo/vector-icons';
 import { useFonts, FONT_FAMILIES } from './Fonts';
 
-const CustomDrawerContent = (props:any) => {
+const CustomDrawerContent = (props: any) => {
   const { fontsLoaded } = useFonts();
 
   if (!fontsLoaded) return null;
 
+  // Import all icons at the top and create icon maps
+  const iconMap = {
+    'home': require('../assets/icons/home.svg'),
+    'information-circle-outline': require('../assets/icons/information-circle-outline.svg'),
+    'grid-outline': require('../assets/icons/grid-outline.svg'),
+    'help-circle-outline': require('../assets/icons/help-circle-outline.svg'),
+  };
+
+  // Social media icons map
+  const socialIconMap = {
+    'logo-instagram': require('../assets/icons/logo-instagram.svg'),
+    'logo-facebook': require('../assets/icons/logo-facebook.svg'),
+    'logo-twitter': require('../assets/icons/logo-twitter.svg'),
+  };
+
   const menuItems = [
-    { 
-      label: 'Home', 
-      icon: 'home-outline', 
-      route: 'Home' 
+    {
+      label: 'Home',
+      icon: 'home',
+      route: 'Home'
     },
-    { 
-      label: 'About Us', 
-      icon: 'information-circle-outline', 
-      route: 'About' 
+    {
+      label: 'About Us',
+      icon: 'information-circle-outline',
+      route: 'About'
     },
-    { 
-      label: 'Collections', 
-      icon: 'grid-outline', 
-      route: 'Collections' 
+    {
+      label: 'Collections',
+      icon: 'grid-outline',
+      route: 'Collections'
     },
-    { 
-      label: 'Support', 
-      icon: 'help-circle-outline', 
-      route: 'Support' 
+    {
+      label: 'Support',
+      icon: 'help-circle-outline',
+      route: 'Support'
     },
   ];
 
@@ -62,8 +76,8 @@ const CustomDrawerContent = (props:any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <DrawerContentScrollView 
-        {...props} 
+      <DrawerContentScrollView
+        {...props}
         contentContainerStyle={styles.drawerContent}
         showsVerticalScrollIndicator={false}
       >
@@ -79,13 +93,28 @@ const CustomDrawerContent = (props:any) => {
               style={styles.closeButton}
               onPress={() => props.navigation.closeDrawer()}
             >
-              <Ionicons name="close" size={24} color="#FCF4E3" />
+              <Image
+                source={require('../assets/icons/close.svg')}
+                style={{
+                  height: 24,
+                  width: 24,
+                  tintColor: '#FCF4E3'
+                }}
+                resizeMode='contain'
+              />
             </TouchableOpacity>
           </View>
 
           {/* Search Bar */}
           <View style={styles.searchContainer}>
-            <Ionicons name="search-outline" size={20} color="rgba(252, 244, 227, 0.7)" />
+            <Image
+              source={require('../assets/icons/search.svg')}
+              style={{
+                height: 18,
+                tintColor: 'rgba(252, 244, 227, 0.7)'
+              }}
+              resizeMode='contain'
+            />
             <TextInput
               style={styles.searchInput}
               placeholder="Search"
@@ -108,14 +137,17 @@ const CustomDrawerContent = (props:any) => {
                 ]}
                 onPress={() => props.navigation.navigate(item.route)}
               >
-                <Ionicons 
-                // @ts-ignore
-
-                  name={item.icon} 
-                  size={22} 
-                  color={isActive ? "#FCF4E3" : "rgba(252, 244, 227, 0.7)"} 
+                <Image
+                  // @ts-ignore
+                  source={iconMap[item.icon]}
+                  style={{
+                    height: 22,
+                    width: 22,
+                    tintColor: isActive ? "#FCF4E3" : "rgba(252, 244, 227, 0.7)"
+                  }}
+                  resizeMode='contain'
                 />
-                <Text 
+                <Text
                   style={[
                     styles.menuItemText,
                     isActive && styles.activeMenuItemText
@@ -132,16 +164,34 @@ const CustomDrawerContent = (props:any) => {
         <View style={styles.menuSection}>
           <TouchableOpacity style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>SHOP NOW</Text>
-            <Ionicons name="chevron-down-outline" size={18} color="rgba(252, 244, 227, 0.7)" />
+            <Image
+              style={{
+                tintColor: 'rgba(252, 244, 227, 0.7)',
+                height: 16,
+                width: 16,
+                transform: [{ translateY: -8 }]
+              }}
+              resizeMode='contain'
+              source={require('../assets/icons/chevron-forward.svg')}
+            />
           </TouchableOpacity>
-          
+
           {shopMenuItems.map((item, index) => (
             <TouchableOpacity key={index} style={styles.subMenuItem}>
               <View>
                 <Text style={styles.subMenuItemText}>{item.label}</Text>
                 <Text style={styles.subMenuItemSubtext}>{item.subLabel}</Text>
               </View>
-              <Ionicons name="chevron-forward-outline" size={16} color="rgba(252, 244, 227, 0.5)" />
+              <Image
+                style={{
+                  tintColor: 'rgba(252, 244, 227, 0.7)',
+                  height: 12,
+                  width: 12,
+                  transform: [{ translateY: -8 }]
+                }}
+                resizeMode='contain'
+                source={require('../assets/icons/chevron-forward.svg')}
+              />
             </TouchableOpacity>
           ))}
         </View>
@@ -159,20 +209,44 @@ const CustomDrawerContent = (props:any) => {
         {/* Footer Info */}
         <View style={styles.footer}>
           <TouchableOpacity style={styles.footerItem}>
-            <Ionicons name="mail-outline" size={18} color="rgba(252, 244, 227, 0.7)" />
+            <Image
+              source={require('../assets/icons/mail.svg')}
+              style={{
+                height: 18,
+                width: 18,
+                tintColor: 'rgba(252,244,227,0.7)'
+              }}
+              resizeMode='contain'
+            />
             <Text style={styles.footerText}>hello@beshas.com</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.footerItem}>
-            <Ionicons name="call-outline" size={18} color="rgba(252, 244, 227, 0.7)" />
+            <Image
+              source={require('../assets/icons/call-outline.svg')}
+              style={{
+                height: 18,
+                width: 18,
+                tintColor: 'rgba(252,244,227,0.7)'
+              }}
+              resizeMode='contain'
+            />
             <Text style={styles.footerText}>+1 (555) 123-4567</Text>
           </TouchableOpacity>
-          
+
           {/* Social Media Icons */}
           <View style={styles.socialContainer}>
             {['logo-instagram', 'logo-facebook', 'logo-twitter'].map((icon, index) => (
               <TouchableOpacity key={index} style={styles.socialButton}>
-                {/* @ts-ignore */}
-                <Ionicons name={icon} size={20} color="rgba(252, 244, 227, 0.7)" />
+                <Image
+                  // @ts-ignore
+                  source={socialIconMap[icon]}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    tintColor: "rgba(252, 244, 227, 0.7)"
+                  }}
+                  resizeMode='contain'
+                />
               </TouchableOpacity>
             ))}
           </View>
@@ -191,7 +265,6 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   header: {
-    paddingHorizontal: 20,
     paddingTop: 10,
     paddingBottom: 30,
     borderBottomWidth: 1,
@@ -201,11 +274,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   logo: {
     height: 40,
-    width: 120,
+    width: 60,
   },
   closeButton: {
     padding: 5,
@@ -227,7 +300,7 @@ const styles = StyleSheet.create({
   },
   menuSection: {
     paddingHorizontal: 20,
-    marginTop: 30,
+    marginTop: 20,
   },
   sectionTitle: {
     fontSize: 12,
@@ -240,7 +313,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 5,
   },
   menuItem: {
     flexDirection: 'row',

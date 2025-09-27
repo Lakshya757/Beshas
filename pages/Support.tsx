@@ -195,12 +195,27 @@ export default function Support() {
             />
             {isMobile && (
               <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                <Ionicons name="menu" size={28} color="white" />
+                <Image
+                  source={require('../assets/icons/menu.svg')}
+                  style={{
+                    height: 28,
+                    width: 28,
+                    tintColor: 'white'
+                  }}
+                  resizeMode='contain'
+                />
               </TouchableOpacity>
             )}
             {!isMobile && (
               <View style={[styles.seachView, { left: isMobile ? 0 : 35 }]}>
-                <Ionicons name="search-outline" size={24} color={'#FFFFFF'} />
+                <Image
+                  source={require('../assets/icons/search.svg')}
+                  style={{
+                    height: 20,
+                    width: 20
+                  }}
+                  resizeMode='contain'
+                />
                 <TextInput
                   style={styles.searchTextInput}
                   placeholder="Search"
@@ -261,7 +276,9 @@ export default function Support() {
                 >
                   Shop Now
                 </Text>
-                <Ionicons name="chevron-down-outline" color={'white'} size={20} />
+                <Image
+                  source={require('../assets/icons/chevron-down.svg')}
+                />
               </TouchableOpacity>
               <View style={styles.account}>
                 <TouchableOpacity>
@@ -291,6 +308,8 @@ export default function Support() {
       </Animated.View>
       {/* NAVBAR */}
 
+
+      {/* MAIN PAGE */}
       <Animated.ScrollView
         ref={scrollViewRef}
         style={[styles.mainBody, { paddingTop: navbarHeight }]}
@@ -442,10 +461,14 @@ export default function Support() {
                   acceptedTerms && styles.checkboxChecked
                 ]}>
                   {acceptedTerms && (
-                    <Ionicons
-                      name="checkmark"
-                      size={16}
-                      color="#FCF4E3"
+                    <Image
+                      source={require('../assets/icons/checkmark.svg')}
+                      style={{
+                        height: 16,
+                        width: 16,
+                        tintColor: '#FCF4E3'
+                      }}
+                      resizeMode="contain"
                     />
                   )}
                 </View>
@@ -517,13 +540,12 @@ export default function Support() {
         </View>
 
         {/* RETURNS */}
-        <View style={styles.returnsView}>
+        <View>
           {/* LEFT SIDE */}
           {/* <View>
             <Text>Returns</Text>
 
           </View> */}
-          {/* MAKE SURE TO ADD THIS PART!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
 
         </View>
 
@@ -613,7 +635,15 @@ export default function Support() {
                 <Text style={styles.fieldLabel}>Select a Topic</Text>
                 <View style={styles.dropdownContainer}>
                   <Text style={styles.dropdownText}>{helpFormData.selectedTopic}</Text>
-                  <Ionicons name="chevron-down-outline" size={20} color="#412023" />
+                  <Image
+                    source={require('../assets/icons/chevron-down.svg')}
+                    style={{
+                      height: 17,
+                      width: 17,
+                      tintColor: '#412023'
+                    }}
+                    resizeMode="contain"
+                  />
                 </View>
               </View>
 
@@ -665,7 +695,15 @@ export default function Support() {
                     helpFormData.agreeToTerms && styles.termsCheckboxChecked
                   ]}>
                     {helpFormData.agreeToTerms && (
-                      <Ionicons name="checkmark" size={14} color="#FCF4E3" />
+                      <Image
+                        source={require('../assets/icons/checkmark.svg')}
+                        style={{
+                          height: 16,
+                          width: 16,
+                          tintColor: '#FCF4E3'
+                        }}
+                        resizeMode="contain"
+                      />
                     )}
                   </View>
                   <Text style={styles.termsText}>I agree to Terms</Text>
@@ -684,14 +722,38 @@ export default function Support() {
         </View>
         {/* WE ARE HERE TO HELP - END */}
 
+        <View style={{ alignItems: 'center' }}>
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            thickness={isMobile ? 3 : 4}
+            style={{
+              marginTop: isMobile ? 30 : isTablet ? 50 : 80,
+              marginBottom: isMobile ? 7 : 9.5
+            }}
+          />
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            thickness={isMobile ? 3 : 4}
+          />
+        </View>
+
+
+        {/* FAQ SECTION */}
+        <View style={styles.FAQView}>
+
+        </View>
+
       </Animated.ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  returnsView: {
-
+  FAQView: {
+    paddingTop: 100,
+    paddingLeft: 100
   },
   checkboxContainer: {
     flexDirection: 'row',

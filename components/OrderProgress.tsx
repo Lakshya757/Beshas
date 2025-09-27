@@ -31,15 +31,15 @@ export const ORDER_STAGES = [
     id: 3,
     title: 'In Transit',
     icon: 'car-outline',
-    completed: true,
-    current: false,
+    completed: false,
+    current: true,
     location: { lat: 26.9124, lng: 80.9420, name: 'Lucknow Hub' }
   },
   {
     id: 4,
     title: 'Delivered',
     icon: 'home-outline',
-    completed: true,
+    completed: false,
     current: false,
     location: { lat: 26.8467, lng: 80.9462, name: 'Your Location, Lucknow' }
   },

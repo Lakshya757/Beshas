@@ -12,7 +12,6 @@ import {
   ScrollView,
   Animated
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -23,7 +22,6 @@ import Footer from '../components/Footer';
 import { useFonts, FONT_FAMILIES } from '../components/Fonts';
 import { useScrollNavbar } from '../components/ScrollNavbar';
 
-const windowWidth = Dimensions.get('window').width;
 const ROOTS_IMAGE_ASPECT_RATIO = 16 / 9;
 
 export default function Home() {
@@ -34,7 +32,7 @@ export default function Home() {
 
   const scrollViewRef = useRef(null);
 
-    useFocusEffect(
+  useFocusEffect(
     useCallback(() => {
       if (scrollViewRef.current) {
         //@ts-ignore
@@ -63,7 +61,7 @@ export default function Home() {
   }
 
 
-  
+
   return (
     <View style={styles.container}>
       <Animated.View
@@ -108,12 +106,26 @@ export default function Home() {
             />
             {isMobile && (
               <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                <Ionicons name="menu" size={28} color="white" />
+                <Image 
+                source={require('../assets/icons/menu.svg')}
+                  style={{
+                    height:28,
+                    width:28,
+                    tintColor:'white'
+                  }}
+                  resizeMode='contain'
+                />
               </TouchableOpacity>
             )}
             {!isMobile && (
               <View style={[styles.seachView, { left: isMobile ? 0 : 35 }]}>
-                <Ionicons name="search-outline" size={24} color={'#FFFFFF'} />
+                <Image
+                  source={require('../assets/icons/search.svg')}
+                  style={{
+                    height: 20,
+                  }}
+                  resizeMode='contain'
+                />
                 <TextInput
                   style={styles.searchTextInput}
                   placeholder="Search"
@@ -174,7 +186,9 @@ export default function Home() {
                 >
                   Shop Now
                 </Text>
-                <Ionicons name="chevron-down-outline" color={'white'} size={20} />
+                <Image
+                  source={require('../assets/icons/chevron-down.svg')}
+                />
               </TouchableOpacity>
               <View style={styles.account}>
                 <TouchableOpacity>
@@ -276,11 +290,15 @@ export default function Home() {
               >
                 Shop Now
               </Text>
-              <Ionicons
-                name="chevron-down-outline"
-                color={'black'}
-                size={isMobile ? 22 : 26}
-                style={{ left: 10, top: 2 }}
+              <Image
+                source={require('../assets/icons/chevron-down.svg')}
+                style={{
+                  tintColor: '#412023',
+                  left: 8, top: 2,
+                  height: 18,
+                  width: 18
+                }}
+                resizeMode='contain'
               />
             </TouchableOpacity>
           </View>
@@ -655,7 +673,7 @@ export default function Home() {
         {/* SECOND DEMOS */}
 
         {!isMobile && (
-
+// ZOOM OUT
           <View style={styles.secondDemosView}>
             <View style={{ flexDirection: 'row' }}>
               <View style={{
@@ -683,7 +701,18 @@ export default function Home() {
                 justifyContent: 'center',
                 flexDirection: 'row'
               }}>
-                <TouchableOpacity><Ionicons name='chevron-back-outline' color={'black'} size={24} /></TouchableOpacity>
+                <TouchableOpacity>
+                  <Image
+                    source={require('../assets/icons/chevron-back.svg')}
+                    style={{
+                      tintColor: '#412023',
+                      right: 8,
+                      height: 18,
+                      width: 18
+                    }}
+                    resizeMode='contain'
+                  />
+                </TouchableOpacity>
                 <View style={{ alignItems: 'center' }}>
                   <Image
                     source={require('../assets/home/SDemo/Placeholder Image-scrollable.png')}
@@ -701,7 +730,18 @@ export default function Home() {
                     fontWeight: '100'
                   }}>White Shorts</Text>
                 </View>
-                <TouchableOpacity><Ionicons name='chevron-forward-outline' color={'black'} size={24} /></TouchableOpacity>
+                <TouchableOpacity>
+                  <Image
+                    source={require('../assets/icons/chevron-forward.svg')}
+                    style={{
+                      tintColor: '#412023',
+                      left: 8, 
+                      height: 18,
+                      width: 18
+                    }}
+                    resizeMode='contain'
+                  />
+                </TouchableOpacity>
               </View>
             </View>{/* FIRST ROW */}
 
@@ -721,7 +761,18 @@ export default function Home() {
                 justifyContent: 'center',
                 flexDirection: 'row'
               }}>
-                <TouchableOpacity><Ionicons name='chevron-back-outline' color={'black'} size={24} /></TouchableOpacity>
+                <TouchableOpacity>
+                  <Image
+                    source={require('../assets/icons/chevron-back.svg')}
+                    style={{
+                      tintColor: '#412023',
+                      right: 8, 
+                      height: 18,
+                      width: 18
+                    }}
+                    resizeMode='contain'
+                  />
+                </TouchableOpacity>
                 <View style={{ alignItems: 'center' }}>
                   <Image
                     source={require('../assets/home/SDemo/Placeholder Image-scrollable.png')}
@@ -739,7 +790,18 @@ export default function Home() {
                     fontWeight: '100'
                   }}>White Shorts</Text>
                 </View>
-                <TouchableOpacity><Ionicons name='chevron-forward-outline' color={'black'} size={24} /></TouchableOpacity>
+                <TouchableOpacity>
+                  <Image
+                    source={require('../assets/icons/chevron-forward.svg')}
+                    style={{
+                      tintColor: '#412023',
+                      left: 8,
+                      height: 18,
+                      width: 18
+                    }}
+                    resizeMode='contain'
+                  />
+                </TouchableOpacity>
               </View>
               <View style={{
                 backgroundColor: '#543236',
@@ -920,7 +982,7 @@ export default function Home() {
               </TouchableOpacity>
             </View>
           </View>
-          
+
           <View style={{ justifyContent: 'center', marginTop: isMobile ? 30 : 0 }}>
             <Image
               source={require('../assets/home/CTA/Placeholder Image.png')}
@@ -1405,7 +1467,7 @@ const styles = StyleSheet.create({
   },
   searchTextInput: {
     paddingHorizontal: 7,
-    fontSize: 18,
+    fontSize: 22,
     color: 'white',
     outlineWidth: 0,
   },
@@ -1444,6 +1506,7 @@ const styles = StyleSheet.create({
   heroNavLinksView: {
     flexWrap: 'wrap',
     justifyContent: 'center',
+    marginTop:30
   },
   responsiveImage: {
     aspectRatio: 1312 / 632,

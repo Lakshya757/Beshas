@@ -17,7 +17,6 @@ import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/nativ
 import { useScrollNavbar } from "../components/ScrollNavbar";
 import { useFonts, FONT_FAMILIES } from "../components/Fonts";
 import CustomLine from "../components/CustomLine";
-import { Ionicons } from "@expo/vector-icons";
 import ReviewsCarousel from "../components/ReviewsCarousel";
 import Footer from "../components/Footer";
 
@@ -121,7 +120,7 @@ const REVIEWS = [
 
 export default function About() {
   const navigation: any = useNavigation();
-  const currentScreen=useRoute().name;
+  const currentScreen = useRoute().name;
   const { width, height } = useWindowDimensions();
   const [menSelected, setMenSelected] = useState(true);
   const { fontsLoaded } = useFonts();
@@ -132,7 +131,7 @@ export default function About() {
       if (scrollViewRef.current) {
         //@ts-ignore
         scrollViewRef.current.scrollTo({ y: 0, animated: false });
-        
+
       }
     }, [])
   );
@@ -207,12 +206,26 @@ export default function About() {
           />
           {isMobile && (
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
-              <Ionicons name="menu" size={28} color="white" />
+              <Image
+                source={require('../assets/icons/menu.svg')}
+                style={{
+                  height: 28,
+                  width: 28,
+                  tintColor: 'white'
+                }}
+                resizeMode='contain'
+              />
             </TouchableOpacity>
           )}
           {!isMobile && (
             <View style={[styles.seachView, { left: isMobile ? 0 : isTablet ? 25 : 35 }]}>
-              <Ionicons name="search-outline" size={isTablet ? 22 : 24} color={'#FFFFFF'} />
+              <Image
+                source={require('../assets/icons/search.svg')}
+                style={{
+                  height: 20,
+                }}
+                resizeMode='contain'
+              />
               <TextInput
                 style={[styles.searchTextInput, { fontSize: isTablet ? 16 : 18 }]}
                 placeholder="Search"
@@ -254,7 +267,9 @@ export default function About() {
 
             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[styles.nrbText, { fontSize: isTablet ? 16 : 19 }]}>Shop Now</Text>
-              <Ionicons name="chevron-down-outline" color={'white'} size={isTablet ? 18 : 20} />
+              <Image
+                source={require('../assets/icons/chevron-down.svg')}
+              />
             </TouchableOpacity>
             <View style={styles.account}>
               <TouchableOpacity>
@@ -326,7 +341,7 @@ export default function About() {
               {
                 width: isMobile ? 100 : isTablet ? 130 : 150,
                 height: isMobile ? 67 : isTablet ? 87 : 100,
-                transform: [{ translateX: isMobile?-50:isTablet?-65:-75 }],
+                transform: [{ translateX: isMobile ? -50 : isTablet ? -65 : -75 }],
 
               }
             ]}
@@ -540,7 +555,14 @@ export default function About() {
                   paddingHorizontal: isMobile ? 0 : 10,
                 }
               ]}>Learn More</Text>
-              <Ionicons name="chevron-forward-outline" size={isMobile ? 16 : isTablet ? 17 : 19} color={'#412023'} />
+              <Image
+                source={require('../assets/icons/chevron-forward.svg')}
+                style={{
+                  height: isMobile ? 11 : isTablet ? 14 : 16,
+                  tintColor: '#412023'
+                }}
+                resizeMode="contain"
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -791,7 +813,7 @@ export default function About() {
             paddingHorizontal: isMobile ? 20 : isTablet ? 40 : 80,
             // paddingBottom: isMobile ? 40 : isTablet ? 60 : 0,
             paddingVertical: 110,
-            paddingBottom:isMobile?-60:0
+            paddingBottom: isMobile ? -60 : 0
 
           },
         ]}
@@ -885,7 +907,7 @@ export default function About() {
             style={{
               resizeMode: 'contain',
               width: isMobile ? 365 : isTablet ? 450 : 600,
-              marginBottom:isMobile?0:120
+              marginBottom: isMobile ? 0 : 120
               // height: isMobile ? 250 : isTablet ? 400 : 550,
             }}
           />
@@ -1070,7 +1092,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     alignSelf: 'center',
     left: '50%',
-    
+
   },
   heroTextContainer: {
     position: 'absolute',

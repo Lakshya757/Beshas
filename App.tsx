@@ -1,7 +1,3 @@
-// First, install the required package:
-// npm install @react-navigation/drawer react-native-gesture-handler react-native-reanimated
-
-// App.js - Updated with Drawer Navigation
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from "react";
 import * as Font from 'expo-font'
@@ -16,7 +12,6 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Support from './pages/Support';
 import CustomDrawerContent from './components/CustomDrawerContent';
-import { Ionicons } from '@expo/vector-icons';
 
 type RootStackParamsList = {
   Home: undefined;
@@ -74,17 +69,10 @@ function DrawerNavigator() {
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  useEffect(() => {
-    async function loadFonts() {
-      await Font.loadAsync(Ionicons.font);
-      setFontsLoaded(true);
-    }
-    loadFonts();
-  }, []);
 
-  if (!fontsLoaded) {
-    return <View><Text>Loading...</Text></View>;
-  }
+  // if (!fontsLoaded) {
+  //   return <View><Text>Loading...</Text></View>;
+  // }
   return (
     <NavigationContainer>
       <DrawerNavigator />
