@@ -4,6 +4,7 @@
 // App.js - Updated with Drawer Navigation
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from "react";
+import * as Font from 'expo-font'
 import "@expo/metro-runtime";
 import {
   NavigationContainer,
@@ -15,6 +16,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Support from './pages/Support';
 import CustomDrawerContent from './components/CustomDrawerContent';
+import { Ionicons } from '@expo/vector-icons';
 
 type RootStackParamsList = {
   Home: undefined;
@@ -44,22 +46,22 @@ function DrawerNavigator() {
         },
       }}
     >
-      <Drawer.Screen 
-        name="Home" 
+      <Drawer.Screen
+        name="Home"
         component={Home}
         options={{
           drawerLabel: 'Home',
         }}
       />
-      <Drawer.Screen 
-        name="About" 
+      <Drawer.Screen
+        name="About"
         component={About}
         options={{
           drawerLabel: 'About Us',
         }}
       />
-      <Drawer.Screen 
-        name="Support" 
+      <Drawer.Screen
+        name="Support"
         component={Support}
         options={{
           drawerLabel: 'Support',
@@ -70,6 +72,19 @@ function DrawerNavigator() {
 }
 
 export default function App() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync(Ionicons.font);
+      setFontsLoaded(true);
+    }
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    return <View><Text>Loading...</Text></View>;
+  }
   return (
     <NavigationContainer>
       <DrawerNavigator />

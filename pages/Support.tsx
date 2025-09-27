@@ -1,3 +1,5 @@
+// Replace the incomplete "We are Here to Help" section with this complete implementation
+
 import React, { useCallback, useRef, useState } from "react";
 import {
   View,
@@ -19,6 +21,8 @@ import CustomLine from "../components/CustomLine";
 import { Ionicons } from "@expo/vector-icons";
 import { useScrollNavbar } from "../components/ScrollNavbar";
 import LeafletMaps from "../components/LeafletMaps";
+import { LinearGradient } from "expo-linear-gradient";
+import OrderTrackingProgress from "../components/OrderProgress";
 
 // Import all images statically
 const images = {
@@ -78,12 +82,42 @@ const ORDER_STAGES = [
   },
 ];
 
+const TOPIC_OPTIONS = [
+  'Choose one...',
+  'General Inquiry',
+  'Order Status',
+  'Returns Request',
+  'Product Feedback',
+  'Technical Support',
+  'Billing Question',
+  'Other'
+];
+
+const ASSISTANCE_OPTIONS = [
+  { label: 'General Inquiry', value: 'general' },
+  { label: 'Order Status', value: 'order' },
+  { label: 'Returns Request', value: 'returns' },
+  { label: 'Product Feedback', value: 'feedback' },
+  { label: 'Other Inquiry', value: 'other_inquiry' },
+  { label: 'Other', value: 'other' },
+];
+
 export default function Support() {
   const navigation: any = useNavigation();
   const { fontsLoaded } = useFonts();
   const { width } = useWindowDimensions();
 
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [helpFormData, setHelpFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    selectedTopic: 'Choose one...',
+    selectedAssistance: '',
+    message: '',
+    agreeToTerms: false
+  });
 
   const isMobile = width < 768;
   const isTablet = width >= 768 && width < 1024;
@@ -101,6 +135,18 @@ export default function Support() {
       }
     }, [])
   );
+
+  const updateHelpFormData = (field: string, value: string | boolean) => {
+    setHelpFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSubmitHelpForm = () => {
+    console.log('Help form submitted:', helpFormData);
+    // Add your form submission logic here
+  };
 
   if (!fontsLoaded) return null;
 
@@ -408,34 +454,245 @@ export default function Support() {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.submitButton}>
-                <Text style={styles.submitButtonText}>Submit</Text>
+              <TouchableOpacity>
+                <LinearGradient
+                  colors={['#FCF4E3', '#543236']}
+                  style={{
+                    borderRadius: 13,
+                    borderColor: '#43282B',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderWidth: 1,
+                    left: isMobile ? (width * 0.8) / 2 : (width * 0.35) / 2,
+                    width: 80,
+                    transform: [{ translateX: -40 }]
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: 'white',
+                      paddingVertical: 9,
+                      paddingHorizontal: 14,
+                      borderRadius: 13,
+                      fontSize: 16,
+                    }}
+                  >Submit</Text>
+                </LinearGradient>
               </TouchableOpacity>
             </View>
 
             {/* TRACKING MAP AND PROGRESS */}
-            <View style={{ flex: isMobile ? 1 : 0.4, marginLeft: isMobile ? 0 : 50, marginTop: isMobile ? 50 : 0 }}>
-              {/* Order Progress */}
-              {/* <View style={styles.progressSection}>
-                <Text style={styles.progressTitle}>Order Status</Text>
+            <View style={{ marginLeft: 500, marginTop: isMobile ? 50 : 0, flexDirection: 'row', alignItems: 'center' }}>
+              {/* TRACKING PROGRESS */}
+              <View>
                 <OrderTrackingProgress />
-              </View> */}
+              </View>
 
-              {/* Tracking Map */}
-              <View style={styles.mapSection}>
-                <LeafletMaps/>
+              {/*  Map */}
+              <View style={[styles.mapSection, {
+                // right: (width * 0.25),
+                // transform: [{ translateX: 600 }],
+              }]}>
+                <LeafletMaps />
               </View>
             </View>
           </View>
-          {/* MAIN TRACKING */}
         </View>
+
+        <View style={{ alignItems: 'center' }}>
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            thickness={isMobile ? 3 : 4}
+            style={{
+              marginTop: isMobile ? 30 : isTablet ? 50 : 80,
+              marginBottom: isMobile ? 7 : 9.5
+            }}
+          />
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            thickness={isMobile ? 3 : 4}
+          />
+        </View>
+
+        {/* RETURNS */}
+        <View style={styles.returnsView}>
+          {/* LEFT SIDE */}
+          {/* <View>
+            <Text>Returns</Text>
+
+          </View> */}
+          {/* MAKE SURE TO ADD THIS PART!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
+
+        </View>
+
+        <View style={{ alignItems: 'center' }}>
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            thickness={isMobile ? 3 : 4}
+            style={{
+              marginTop: isMobile ? 30 : isTablet ? 50 : 80,
+              marginBottom: isMobile ? 7 : 9.5
+            }}
+          />
+          <CustomLine
+            length={width}
+            color="#E85A4F"
+            thickness={isMobile ? 3 : 4}
+          />
+        </View>
+
+        {/* WE ARE HERE TO HELP - COMPLETE SECTION */}
+        <View style={styles.helpSectionContainer}>
+          <View style={styles.helpHeaderContainer}>
+            <Text style={styles.helpMainTitle}>We are Here to Help</Text>
+            <Text style={styles.helpDescription}>
+              Welcome to our Contact Us page! Whether you have questions about your order, need assistance with returns, or want to reach out for any other inquiries, we're here to provide the support you need.
+            </Text>
+          </View>
+
+          {/* CONTACT FORM */}
+          <View style={styles.contactFormContainer}>
+            <View style={styles.contactFormHeader}>
+              <Text style={styles.supportLabel}>Support</Text>
+              <Text style={styles.getInTouchTitle}>Get in Touch</Text>
+              <Text style={styles.getInTouchSubtitle}>We're here to help you with any questions.</Text>
+            </View>
+
+            <View style={styles.formContainer}>
+              {/* FIRST ROW - First Name and Last Name */}
+              <View style={styles.formRow}>
+                <View style={styles.formFieldHalf}>
+                  <Text style={styles.fieldLabel}>First Name</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    value={helpFormData.firstName}
+                    onChangeText={(text) => updateHelpFormData('firstName', text)}
+                    placeholder=""
+                  />
+                </View>
+                <View style={styles.formFieldHalf}>
+                  <Text style={styles.fieldLabel}>Last Name</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    value={helpFormData.lastName}
+                    onChangeText={(text) => updateHelpFormData('lastName', text)}
+                    placeholder=""
+                  />
+                </View>
+              </View>
+
+              {/* SECOND ROW - Email and Phone Number */}
+              <View style={styles.formRow}>
+                <View style={styles.formFieldHalf}>
+                  <Text style={styles.fieldLabel}>Email</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    value={helpFormData.email}
+                    onChangeText={(text) => updateHelpFormData('email', text)}
+                    placeholder=""
+                    keyboardType="email-address"
+                  />
+                </View>
+                <View style={styles.formFieldHalf}>
+                  <Text style={styles.fieldLabel}>Phone Number</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    value={helpFormData.phoneNumber}
+                    onChangeText={(text) => updateHelpFormData('phoneNumber', text)}
+                    placeholder=""
+                    keyboardType="phone-pad"
+                  />
+                </View>
+              </View>
+
+              {/* SELECT A TOPIC DROPDOWN */}
+              <View style={styles.formFieldFull}>
+                <Text style={styles.fieldLabel}>Select a Topic</Text>
+                <View style={styles.dropdownContainer}>
+                  <Text style={styles.dropdownText}>{helpFormData.selectedTopic}</Text>
+                  <Ionicons name="chevron-down-outline" size={20} color="#412023" />
+                </View>
+              </View>
+
+              {/* HOW CAN WE ASSIST - Radio Buttons */}
+              <View style={styles.formFieldFull}>
+                <Text style={styles.fieldLabel}>How can we assist?</Text>
+                <View style={styles.radioButtonContainer}>
+                  {ASSISTANCE_OPTIONS.map((option, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.radioButtonRow}
+                      onPress={() => updateHelpFormData('selectedAssistance', option.value)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={styles.radioButton}>
+                        {helpFormData.selectedAssistance === option.value && (
+                          <View style={styles.radioButtonSelected} />
+                        )}
+                      </View>
+                      <Text style={styles.radioButtonLabel}>{option.label}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              {/* MESSAGE FIELD */}
+              <View style={styles.formFieldFull}>
+                <TextInput
+                  style={styles.messageTextInput}
+                  value={helpFormData.message}
+                  onChangeText={(text) => updateHelpFormData('message', text)}
+                  placeholder="Message"
+                  placeholderTextColor={'rgba(65, 32, 35,0.7)'}
+                  multiline={true}
+                  numberOfLines={6}
+                  textAlignVertical="top"
+                />
+              </View>
+
+              {/* TERMS CHECKBOX AND SUBMIT */}
+              <View style={styles.formFooter}>
+                <TouchableOpacity
+                  style={styles.termsCheckboxContainer}
+                  onPress={() => updateHelpFormData('agreeToTerms', !helpFormData.agreeToTerms)}
+                  activeOpacity={0.7}
+                >
+                  <View style={[
+                    styles.termsCheckbox,
+                    helpFormData.agreeToTerms && styles.termsCheckboxChecked
+                  ]}>
+                    {helpFormData.agreeToTerms && (
+                      <Ionicons name="checkmark" size={14} color="#FCF4E3" />
+                    )}
+                  </View>
+                  <Text style={styles.termsText}>I agree to Terms</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.submitButton}
+                  onPress={handleSubmitHelpForm}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.submitButtonText}>Send</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+        {/* WE ARE HERE TO HELP - END */}
+
       </Animated.ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  // Original styles
+  returnsView: {
+
+  },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -463,7 +720,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   submitButton: {
-    backgroundColor: '#412023',
+    // backgroundColor: '#412023',
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 8,
@@ -673,7 +930,8 @@ const styles = StyleSheet.create({
 
   // Map styles
   mapSection: {
-    marginTop: 20,
+    // marginTop: 20,
+
   },
   mapTitle: {
     fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
@@ -777,4 +1035,215 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#666',
   },
+
+  // Help Section Styles
+  helpSectionContainer: {
+    paddingTop: 100,
+    marginHorizontal: 100,
+    marginBottom: 100,
+  },
+  helpHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 80,
+  },
+  helpMainTitle: {
+    fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+    fontSize: 60,
+    color: '#412023',
+    flex: 1,
+  },
+  helpDescription: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    fontSize: 18,
+    flexWrap: 'wrap',
+    width: 600,
+    color: '#412023',
+    lineHeight: 24,
+  },
+  contactFormContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 15,
+    padding: 40,
+    borderWidth: 2,
+    borderColor: 'rgba(65, 32, 35, 0.2)',
+    borderStyle: 'dashed',
+    ...Platform.select({
+      web: {
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      },
+      default: {
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+    }),
+  },
+  contactFormHeader: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  supportLabel: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    color: '#412023',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  getInTouchTitle: {
+    fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
+    fontSize: 42,
+    color: '#412023',
+    marginBottom: 10,
+  },
+  getInTouchSubtitle: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    color: '#412023',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  formContainer: {
+    width: '100%',
+  },
+  formRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 30,
+  },
+  formFieldHalf: {
+    flex: 0.48,
+  },
+  formFieldFull: {
+    width: '100%',
+    marginBottom: 30,
+  },
+  fieldLabel: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    color: '#412023',
+    fontSize: 14,
+    marginBottom: 8,
+  },
+  textInput: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#412023',
+    color: '#412023',
+    fontSize: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 0,
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    ...Platform.select({
+      web: {
+        outline: 'none',
+      },
+    }),
+  },
+  dropdownContainer: {
+    borderWidth: 1,
+    borderColor: '#412023',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+  },
+  dropdownText: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    color: '#412023',
+    fontSize: 16,
+  },
+  radioButtonContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 10,
+  },
+  radioButtonRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 25,
+    marginBottom: 10,
+    width: '48%',
+  },
+  radioButton: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 2,
+    borderColor: '#412023',
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  radioButtonSelected: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#412023',
+  },
+  radioButtonLabel: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    color: '#412023',
+    fontSize: 14,
+  },
+  messageTextInput: {
+    borderWidth: 1,
+    borderColor: '#412023',
+    borderRadius: 8,
+    padding: 15,
+    color: '#412023',
+    fontSize: 16,
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    minHeight: 120,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    ...Platform.select({
+      web: {
+        outline: 'none',
+      },
+    }),
+  },
+  formFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  termsCheckboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  termsCheckbox: {
+    width: 18,
+    height: 18,
+    borderWidth: 1,
+    borderColor: '#412023',
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: 3,
+  },
+  termsCheckboxChecked: {
+    backgroundColor: '#412023',
+  },
+  termsText: {
+    fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+    color: '#412023',
+    fontSize: 14,
+  },
+  // submitButton: {
+  //   backgroundColor: '#412023',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 25,
+  //   borderRadius: 8,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // submitButtonText: {
+  //   fontFamily: FONT_FAMILIES.FUTURA_BOOK,
+  //   color: '#FCF4E3',
+  //   fontSize: 16,
+  //   fontWeight: '600',
+  // },
 })
