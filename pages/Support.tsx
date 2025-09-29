@@ -17,7 +17,6 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 import { useFonts, FONT_FAMILIES } from "../components/Fonts";
 import CustomLine from "../components/CustomLine";
-import { Ionicons } from "@expo/vector-icons";
 import { useScrollNavbar } from "../components/ScrollNavbar";
 import LeafletMaps from "../components/LeafletMaps";
 import { LinearGradient } from "expo-linear-gradient";

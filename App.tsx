@@ -12,11 +12,13 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Support from './pages/Support';
 import CustomDrawerContent from './components/CustomDrawerContent';
+import Cart from './pages/Cart';
 
 type RootStackParamsList = {
   Home: undefined;
   About: undefined;
   Support: undefined;
+  Cart:undefined;
 }
 
 const Stack = createNativeStackNavigator();
@@ -25,7 +27,7 @@ const Drawer = createDrawerNavigator();
 function DrawerNavigator() {
   return (
     <Drawer.Navigator
-      initialRouteName="Support"
+      initialRouteName="Cart"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
@@ -60,6 +62,13 @@ function DrawerNavigator() {
         component={Support}
         options={{
           drawerLabel: 'Support',
+        }}
+      />
+      <Drawer.Screen
+        name="Cart"
+        component={Cart}
+        options={{
+          drawerLabel: 'Cart',
         }}
       />
     </Drawer.Navigator>
