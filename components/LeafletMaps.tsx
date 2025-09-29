@@ -417,7 +417,7 @@ const LeafletMaps: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     borderRadius: 12,
     overflow: 'hidden',
     ...Platform.select({
@@ -434,8 +434,9 @@ const styles = StyleSheet.create({
     }),
   },
   mapContainer: {
-    flex: 1,
-    position: 'relative',
+    // flex: 1,
+    // position: 'relative',
+    
     minHeight: 500,
     margin: 12,
   },

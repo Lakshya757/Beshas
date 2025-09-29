@@ -130,7 +130,7 @@ export default function About() {
     useCallback(() => {
       if (scrollViewRef.current) {
         //@ts-ignore
-        scrollViewRef.current.scrollTo({ y: 0, animated: false });
+        // scrollViewRef.current.scrollTo({ y: 0, animated: false });
 
       }
     }, [])
@@ -397,7 +397,7 @@ export default function About() {
                 width: isMobile ? width - 40 : isTablet ? width - 120 : 500,
               }
             ]}>
-              Embrace Tradition with a Modern Twist
+              Embrace Tradition with a Modern Twist 
             </Text>
             <Text style={[
               styles.subHeroText,
@@ -457,7 +457,7 @@ export default function About() {
         styles.heritageView,
         {
           flexDirection: isMobile ? 'column' : 'row',
-          paddingHorizontal: isMobile ? 20 : isTablet ? 40 : 80,
+          paddingHorizontal: isMobile ? 30 : isTablet ? 50 : 100,
           paddingTop: isMobile ? 50 : isTablet ? 70 : 100,
           paddingBottom: isMobile ? 60 : isTablet ? 80 : 140,
           alignItems: isMobile ? 'flex-start' : 'center',
@@ -605,7 +605,7 @@ export default function About() {
 
         <View style={{
           width: isMobile ? '100%' : isTablet ? '45%' : '50%',
-          alignItems: 'center',
+          alignItems: 'flex-end',
           justifyContent: 'center',
         }}>
           <Image
@@ -846,11 +846,10 @@ export default function About() {
           styles.discover,
           {
             flexDirection: isMobile ? 'column' : 'row',
-            paddingHorizontal: isMobile ? 20 : isTablet ? 40 : 80,
+            paddingHorizontal: isMobile ? 30 : isTablet ? 50 : 100,
             // paddingBottom: isMobile ? 40 : isTablet ? 60 : 0,
             paddingVertical: 110,
-            paddingBottom: isMobile ? -60 : 0
-
+            paddingBottom: isMobile ? -60 : 0,
           },
         ]}
       >

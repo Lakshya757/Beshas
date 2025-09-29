@@ -36,7 +36,7 @@ export default function Home() {
     useCallback(() => {
       if (scrollViewRef.current) {
         //@ts-ignore
-        scrollViewRef.current.scrollTo({ y: 0, animated: false });
+        // scrollViewRef.current.scrollTo({ y: 0, animated: false });
       }
     }, [])
   );
@@ -681,16 +681,16 @@ export default function Home() {
             <View style={{ flexDirection: 'row' }}>
               <View style={{
                 backgroundColor: '#543236',
-                height: 880,
-                width: 704,
+                height: 660,
+                width: 525,
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
                 <Image
                   source={require('../assets/home/SDemo/Placeholder Image-big.png')}
                   style={{
-                    height: 820,
-                    width: 700,
+                    height: 600,
+                    // width: 700,
                     resizeMode: 'contain'
                   }}
                 />
@@ -698,8 +698,8 @@ export default function Home() {
               <View style={{
                 padding: 50,
                 backgroundColor: '#EEEBE9',
-                height: 880,
-                width: 704,
+                height: 660,
+                width: 525,
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'row'
@@ -758,8 +758,8 @@ export default function Home() {
               <View style={{
                 padding: 50,
                 backgroundColor: '#EEEBE9',
-                height: 880,
-                width: 704,
+                height: 660,
+                width: 525,
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'row'
@@ -808,16 +808,16 @@ export default function Home() {
               </View>
               <View style={{
                 backgroundColor: '#543236',
-                height: 880,
-                width: 704,
+                height: 660,
+                width: 525,
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
                 <Image
                   source={require('../assets/home/SDemo/Placeholder Image-big.png')}
                   style={{
-                    height: 820,
-                    width: 700,
+                    height: 600,
+                    // width: 700,
                     resizeMode: 'contain'
                   }}
                 />
@@ -1138,6 +1138,7 @@ export default function Home() {
                         +1 (555) 123-4567
                       </Text>
                     </View>
+
 
                     {/* Office Section */}
                     <View style={{
