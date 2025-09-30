@@ -9,6 +9,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   RefreshControl,
+  TextInput,
 } from 'react-native';
 import ShopifyService, { ShopifyProduct } from '../services/shopify-service';
 import { useNavigation } from '@react-navigation/native';
@@ -19,6 +20,8 @@ const ProductListScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  
 
   const loadProducts = async () => {
     try {
@@ -109,6 +112,11 @@ const ProductListScreen = () => {
           </View>
         }
       />
+      <TextInput
+        onChangeText={(x)=>{setSearchText(x)}}
+        value={searchText}
+      />
+      <TouchableOpacity onPress={()=>{ShopifyService.searchProducts(searchText)}}><Text>Search</Text></TouchableOpacity>
     </View>
   );
 };

@@ -226,6 +226,7 @@ class ShopifyService {
     `;
 
     const data = await this.fetchGraphQL(query, { query: searchTerm, first });
+    console.log(data.products.edges.map((edge: any) => edge.node))
     return data.products.edges.map((edge: any) => edge.node);
   }
 }

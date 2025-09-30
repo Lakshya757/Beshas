@@ -224,13 +224,22 @@ export default function Store() {
         </View>
         {/* BANNER END */}
 
-        <View></View>
+        <View style={styles.craftedView}>
+
+
+                
+        </View>
       </Animated.ScrollView >
     </View >
   )
 };
 
 const styles = StyleSheet.create({
+  craftedView:{
+    backgroundColor:'#FCF4E3',
+    paddingHorizontal:100,
+    paddingVertical:100
+  },
   container: {
     flex: 1,
     backgroundColor: '#FCF4E3',
@@ -238,6 +247,7 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 2
   },
+  
   heroView: {
     alignItems: 'center',
     paddingBottom: 85,

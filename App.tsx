@@ -24,9 +24,6 @@ type RootStackParamsList = {
   Cart:undefined;
 }
 
-// storefront api access token: 9dfc03c1652c7018e93d16fb979f0db8
-//api key32d65d4b2047086aed9f3e8347adf4a4
-// secret: 9ae7d12186608e69660baf2e9933e742
  
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -34,7 +31,7 @@ const Drawer = createDrawerNavigator();
 function DrawerNavigator() {
   return (
     <Drawer.Navigator
-      initialRouteName="ProductList"
+      initialRouteName="Home"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,

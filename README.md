@@ -1,7 +1,6 @@
 # Beshas
 
 ## To-do List
-* Zoom out the second demo
 * Set alignments and responsiveness for all pages for "zoomed in" cases too
 
 
