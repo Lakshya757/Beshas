@@ -13,6 +13,9 @@ import About from './pages/About';
 import Support from './pages/Support';
 import CustomDrawerContent from './components/CustomDrawerContent';
 import Cart from './pages/Cart';
+import Store from './pages/Store';
+import ProductListScreen from './components/ProductList';
+import ProductDetailScreen from './pages/ProductDetails';
 
 type RootStackParamsList = {
   Home: undefined;
@@ -21,13 +24,17 @@ type RootStackParamsList = {
   Cart:undefined;
 }
 
+// storefront api access token: 9dfc03c1652c7018e93d16fb979f0db8
+//api key32d65d4b2047086aed9f3e8347adf4a4
+// secret: 9ae7d12186608e69660baf2e9933e742
+ 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator() {
   return (
     <Drawer.Navigator
-      initialRouteName="Cart"
+      initialRouteName="ProductList"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
@@ -71,6 +78,27 @@ function DrawerNavigator() {
           drawerLabel: 'Cart',
         }}
       />
+      <Drawer.Screen
+        name="Store"
+        component={Store}
+        options={{
+          drawerLabel: 'Store',
+        }}
+        />
+      <Drawer.Screen
+        name="ProductList"
+        component={ProductListScreen}
+        options={{
+          drawerLabel: 'ProductList',
+        }}
+        />
+      <Drawer.Screen
+        name="ProductDetail"
+        component={ProductDetailScreen}
+        options={{
+          drawerLabel: 'ProductDetail',
+        }}
+        />
     </Drawer.Navigator>
   );
 }

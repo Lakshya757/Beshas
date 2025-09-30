@@ -24,6 +24,7 @@ import OrderTrackingProgress from "../components/OrderProgress";
 import FAQScreen from "../components/FAQDropdown";
 import AnimatedFAQDropdown from "../components/FAQDropdown";
 import Footer from "../components/Footer";
+import NavBar from "../components/Navbar";
 
 // Import all images statically
 const images = {
@@ -212,160 +213,8 @@ export default function Support() {
   return (
     <View style={styles.container}>
       {/* NAVBAR */}
-      <Animated.View
-        style={[
-          styles.navbarContainer,
-          {
-            transform: [{ translateY: navbarTranslateY }],
-            height: navbarHeight,
-          }
-        ]}
-      >
-        <View
-          style={[
-            styles.navbar,
-            {
-              height: navbarHeight,
-              paddingHorizontal: isMobile ? 15 : Math.min(width * 0.08, 70),
-              flexDirection: isMobile ? 'column' : 'row',
-              paddingVertical: isMobile ? 10 : 0,
-            },
-          ]}
-        >
-          {/* Left side */}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: isMobile ? 'space-between' : 'flex-start',
-              width: isMobile ? '100%' : 'auto',
-            }}
-          >
-            <TouchableOpacity onPress={() => { navigation.navigate('Home') }}>
-              <Image
-                source={require('../assets/home/Navbar/navbar-logo.png')}
-                style={[
-                  styles.logo,
-                  {
-                    height: isDesktop ? 100 : isMobile ? 25 : 40,
-                    marginHorizontal: isMobile ? 0 : 30,
-                  },
-                ]}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-            {isMobile && (
-              <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                <Image
-                  source={require('../assets/icons/menu.svg')}
-                  style={{
-                    height: 28,
-                    width: 28,
-                    tintColor: 'white'
-                  }}
-                  resizeMode='contain'
-                />
-              </TouchableOpacity>
-            )}
-            {!isMobile && (
-              <View style={[styles.seachView, { left: isMobile ? 0 : 35 }]}>
-                <Image
-                  source={require('../assets/icons/search.svg')}
-                  style={{
-                    height: 20,
-                  }}
-                  resizeMode='contain'
-                />
-                <TextInput
-                  style={styles.searchTextInput}
-                  placeholder="Search"
-                  placeholderTextColor={'white'}
-                />
-              </View>
-            )}
-          </View>
+      <NavBar userLoggedIn={false} handleScroll={handleScroll} navbarTranslateY={navbarTranslateY} navbarHeight={navbarHeight} />
 
-          {/* Right side - Desktop only */}
-          {!isMobile && (
-            <View
-              style={[
-                styles.navbarRightButtonsView,
-                { flexWrap: isTablet ? 'wrap' : 'nowrap' },
-              ]}
-            >
-              <TouchableOpacity
-                style={styles.navbarRightButton}
-                onPress={() => navigation.navigate('Home')}
-              >
-                <Text style={[
-                  styles.nrbText,
-                  { fontSize: isTablet ? 16 : 19 },
-                ]}>Home</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('About')}
-                style={styles.navbarRightButton}
-              >
-                <Text style={[
-                  styles.nrbText,
-                  { fontSize: isTablet ? 16 : 19 },
-                ]}>About Us</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.navbarRightButton}>
-                <Text style={[
-                  styles.nrbText,
-                  { fontSize: isTablet ? 16 : 19 },
-                ]}>Collections</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.navbarRightButton}
-                onPress={() => navigation.navigate('Support')}
-              >
-                <Text style={[
-                  styles.nrbText,
-                  { fontSize: isTablet ? 16 : 19 },
-                ]}>Support</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text
-                  style={[
-                    styles.nrbText,
-                    { fontSize: isTablet ? 16 : 19 },
-                  ]}
-                >
-                  Shop Now
-                </Text>
-                <Image
-                  source={require('../assets/icons/chevron-down.svg')}
-                />
-              </TouchableOpacity>
-              <View style={styles.account}>
-                <TouchableOpacity>
-                  <Text
-                    style={[
-                      styles.accountButtonsText,
-                      { fontSize: isTablet ? 16 : 19 },
-                    ]}
-                  >
-                    Join
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Text
-                    style={[
-                      styles.accountButtonsText,
-                      { fontSize: isTablet ? 16 : 19 },
-                    ]}
-                  >
-                    Shop
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        </View>
-      </Animated.View>
       {/* NAVBAR */}
 
       {/* MAIN PAGE */}
@@ -1251,7 +1100,7 @@ export default function Support() {
                   maxWidth: 1400,
                   // width:1100,
                   height: undefined,
-                  borderRadius:26
+                  borderRadius: 26
                 }}
                 resizeMode="contain"
               />
