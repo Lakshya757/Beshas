@@ -122,7 +122,9 @@ export default function NavBar({ userLoggedIn = false, handleScroll, navbarTrans
                 { fontSize: isTablet ? 16 : 19 },
               ]}>About Us</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.navbarRightButton}>
+            <TouchableOpacity style={styles.navbarRightButton}
+              onPress={() => navigation.navigate('Collections')}
+            >
               <Text style={[
                 styles.nrbText,
                 { fontSize: isTablet ? 16 : 19 },
@@ -190,9 +192,7 @@ export default function NavBar({ userLoggedIn = false, handleScroll, navbarTrans
                     styles.accountButtonsText,
                     { fontSize: isTablet ? 16 : 19 },
                   ]}
-                >
-                  Shop
-                </Text>
+                >Shop</Text>
               </TouchableOpacity>
             </View>
           </View>

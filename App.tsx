@@ -16,6 +16,7 @@ import Cart from './pages/Cart';
 import Store from './pages/Store';
 import ProductListScreen from './components/ProductList';
 import ProductDetailScreen from './pages/ProductDetails';
+import Collections from './pages/Collections';
 
 type RootStackParamsList = {
   Home: undefined;
@@ -31,7 +32,7 @@ const Drawer = createDrawerNavigator();
 function DrawerNavigator() {
   return (
     <Drawer.Navigator
-      initialRouteName="Home"
+      initialRouteName="Collections"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
@@ -94,6 +95,13 @@ function DrawerNavigator() {
         component={ProductDetailScreen}
         options={{
           drawerLabel: 'ProductDetail',
+        }}
+        />
+      <Drawer.Screen
+        name="Collections"
+        component={Collections}
+        options={{
+          drawerLabel: 'Collections',
         }}
         />
     </Drawer.Navigator>

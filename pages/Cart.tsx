@@ -240,13 +240,23 @@ export default function Cart() {
           </View>
 
           <TouchableOpacity style={{
-            marginTop: 50
+            marginTop: 50,
+            flexDirection:'row',
+            alignItems:'center'
           }}><Text style={{
             fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
             textDecorationLine: 'underline',
             fontSize: 30,
             color: '#412023'
-          }}>Proceed to Payment</Text></TouchableOpacity>
+          }}>Proceed to Payment</Text>
+            <Image
+              source={require('../assets/icons/chevron-forward.svg')}
+              style={{
+                tintColor:'#412023',
+                marginLeft:7
+              }}
+            />
+          </TouchableOpacity>
         </View>
 
         <View style={{ alignItems: 'center' }}>

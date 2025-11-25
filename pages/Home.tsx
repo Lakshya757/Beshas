@@ -31,6 +31,61 @@ export default function Home() {
   const [menSelected, setMenSelected] = useState(true);
   const { fontsLoaded } = useFonts();
 
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const rootsSectionRef = useRef(null);
+  const [rootsSectionY, setRootsSectionY] = useState(0);
+
+  const handleScrollWithAnimation = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event) => {
+        // Call your existing handleScroll for navbar
+        //@ts-ignore
+        handleScroll(event);
+      }
+    }
+  );
+
+  const maskHeight = scrollY.interpolate({
+    inputRange: [
+      rootsSectionY - 1800,  // CHANGED: Start animation earlier (was -500)
+      rootsSectionY - 200,  // CHANGED: Begin transition sooner (was rootsSectionY)
+      rootsSectionY + 600,  // CHANGED: Faster animation (was +500)
+      rootsSectionY + 600,  // CHANGED: End earlier (was +1000)
+    ],
+    outputRange: ['100%', '100%', '0%', '0%'],
+    extrapolate: 'clamp',
+  });
+
+
+  const maskedOpacity = scrollY.interpolate({
+    inputRange: [
+      rootsSectionY - 1000,  // CHANGED: Start earlier (was -500)
+      rootsSectionY - 0,  // CHANGED: Begin fade sooner (was rootsSectionY)
+      rootsSectionY + 200,  // CHANGED: Faster fade (was +500)
+    ],
+    outputRange: [0.52, 0.52, 0],
+    extrapolate: 'clamp',
+  });
+
+  const completeOpacity = scrollY.interpolate({
+    inputRange: [
+      rootsSectionY - 700,  // CHANGED: Start revealing earlier (was rootsSectionY)
+      rootsSectionY - 200,  // CHANGED: Faster reveal (was +500)
+      rootsSectionY + 20,  // CHANGED: Complete earlier (was +1000)
+    ],
+    outputRange: [0, 1, 1],
+    extrapolate: 'clamp',
+  });
+
+  const onRootsSectionLayout = (event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setRootsSectionY(y);
+  };
+
+
+
   const scrollViewRef = useRef(null);
 
   useFocusEffect(
@@ -65,16 +120,19 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <NavBar userLoggedIn={true} handleScroll={handleScroll} navbarTranslateY={navbarTranslateY} navbarHeight={navbarHeight} />
-
-      {/* SCROLLABLE CONTENT */}
+      <NavBar
+        userLoggedIn={true}
+        handleScroll={handleScroll}
+        navbarTranslateY={navbarTranslateY}
+        navbarHeight={navbarHeight}
+      />
       <Animated.ScrollView
-        ref={scrollViewRef} // Add this ref
+        ref={scrollViewRef}
         style={[styles.mainBody, { paddingTop: navbarHeight }]}
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
+        onScroll={handleScrollWithAnimation}  // Use the new combined handler
         scrollEventThrottle={16}
       >
         {/* HERO SECTION */}
@@ -233,46 +291,79 @@ export default function Home() {
           </View>
         </View>
         {/* ROOTS SECTION */}
-        <View style={[styles.root]}>
-          <Image
-            source={require('../assets/home/Layout/roots.png')}
+        <View
+          ref={rootsSectionRef}
+          onLayout={onRootsSectionLayout}
+          style={[styles.root, { height: width / ROOTS_IMAGE_ASPECT_RATIO + (isMobile ? 200 : 400) }]}
+        >
+          {/* Complete Image (bottom layer) */}
+          <Animated.Image
+            source={require('../assets/home/Layout/roots.png')} // Your complete roots image
             style={{
               width: width,
               height: width / ROOTS_IMAGE_ASPECT_RATIO,
-              opacity: 0.52,
+              opacity: completeOpacity,
               resizeMode: 'cover',
+              position: 'absolute',
+              top: 0,
             }}
           />
+
+          {/* Masked Image (top layer that reveals) */}
+          <View style={{ overflow: 'hidden', width: width }}>
+            <Animated.View
+              style={{
+                height: maskHeight,
+                overflow: 'hidden',
+              }}
+            >
+              <Animated.Image
+                source={require('../assets/home/roots-masked.png')}
+                style={{
+                  width: width,
+                  height: width / ROOTS_IMAGE_ASPECT_RATIO,
+                  opacity: maskedOpacity,
+                  resizeMode: 'cover',
+                }}
+              />
+            </Animated.View>
+          </View>
+
+          {/* Text Overlay - Your existing text */}
           <View
             style={{
               position: 'absolute',
-              top: '47%',
+              top: '27%',
               left: isMobile ? 20 : 150,
               right: isMobile ? 20 : 'auto',
               alignItems: isMobile ? 'center' : 'flex-start',
-              transform: [{ translateY: isMobile ? -80 : 0 }],
+              transform: [{ translateY: isMobile ? -80 : 0 }],             
             }}
           >
             <Text
               style={{
                 fontFamily: FONT_FAMILIES.THESEASONS_MEDIUM,
-                color: '#543236',
+                color: '#ffffffff',
                 fontSize: isMobile ? 22 : 50,
                 flexWrap: 'wrap',
                 width: isMobile ? width - 40 : 600,
                 textAlign: isMobile ? 'center' : 'left',
+                opacity:completeOpacity,
+                
               }}
             >
               Where Tradition Meets Modern Fashion
             </Text>
             <Text
               style={{
-                color: '#543236',
+                color: '#ffffffff',
                 fontSize: isMobile ? 14 : 22,
                 flexWrap: 'wrap',
                 width: isMobile ? width - 40 : 600,
                 marginTop: isMobile ? 10 : 20,
                 textAlign: isMobile ? 'center' : 'left',
+                letterSpacing:0.2
+
               }}
             >
               At BÉSHAs, we redefine fashion by merging traditional handloom
@@ -280,12 +371,13 @@ export default function Home() {
               to celebrate your heritage while expressing your individuality.
             </Text>
           </View>
+
           {!isMobile && (
             <Image
               source={require('../assets/Placeholder Image.png')}
               style={{
                 position: 'absolute',
-                top: '50%',
+                top: '35%',
                 left: width - 500,
                 transform: [{ translateX: -340 }, { translateY: -340 }],
                 width: 680,
@@ -359,7 +451,8 @@ export default function Home() {
                 paddingHorizontal: isMobile ? 15 : 20,
                 paddingVertical: 6,
                 borderColor: '#451b17',
-                borderWidth: !menSelected ? 0.2 : 0,
+                borderWidth: 0.2,
+                maxHeight: 39
               }}
             >
               <Text
@@ -380,8 +473,9 @@ export default function Home() {
                 borderRadius: 12,
                 marginHorizontal: isMobile ? 8 : 15,
                 borderColor: '#451b17',
-                borderWidth: menSelected ? 0.2 : 0,
+                borderWidth: 0.2,
                 paddingHorizontal: 10,
+                maxHeight: 39
               }}
             >
               <Text
@@ -1345,7 +1439,7 @@ const styles = StyleSheet.create({
   },
   heroView: {
     alignItems: 'center',
-    paddingBottom: 85,
+    paddingBottom: 45,
   },
   heroNavLinkButton: {
     marginHorizontal: 22,
