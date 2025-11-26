@@ -90,7 +90,7 @@ export default function Store() {
     useCallback(() => {
       if (scrollViewRef.current) {
         //@ts-ignore
-        // scrollViewRef.current.scrollTo({ y: 0, animated: false });
+        scrollViewRef.current.scrollTo({ y: 0, animated: false });
       }
     }, [])
   );
@@ -174,10 +174,6 @@ export default function Store() {
       </View>
     );
   };
-
-
-
-
 
 
 
@@ -530,6 +526,8 @@ export default function Store() {
             thickness={isMobile ? 3 : 4}
           />
         </View>
+
+        
         {/* EXPLORE VIEW */}
         <View style={styles.explore}>
 

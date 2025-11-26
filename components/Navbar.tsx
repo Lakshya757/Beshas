@@ -7,7 +7,7 @@ import { useScrollNavbar } from './ScrollNavbar';
 
 type NavBarParams = {
   userLoggedIn?: boolean;
-  handleScroll: any;
+  handleScroll?: any;
   navbarTranslateY: any;
   navbarHeight: any;
 }

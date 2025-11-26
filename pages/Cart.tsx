@@ -124,7 +124,7 @@ export default function Cart() {
     useCallback(() => {
       if (scrollViewRef.current) {
         //@ts-ignore
-        // scrollViewRef.current.scrollTo({ y: 0, animated: false });
+        scrollViewRef.current.scrollTo({ y: 0, animated: false });
       }
     }, [])
   );
